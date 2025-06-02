@@ -453,6 +453,7 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
+    margin-top: 65%;
 }
 
 .phone-screen {
@@ -662,6 +663,11 @@
     .benefits-image {
         order: -1;
     }
+
+    .phone-frame {
+
+        margin-top: 65%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -703,6 +709,11 @@
     .benefits-text>p {
         text-align: center;
     }
+
+    .phone-frame {
+
+        margin-top: 65%;
+    }
 }
 
 @media (max-width: 576px) {
@@ -712,5 +723,10 @@
 
     .individual-hero-image {
         height: 200px;
+    }
+
+    .phone-frame {
+
+        margin-top: 65%;
     }
 }
