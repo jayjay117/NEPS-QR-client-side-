@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEPS-QR Business Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+    <div x-data="dashboard()" class="flex h-screen overflow-hidden">
+        <!-- Mobile menu toggle -->
+        <div x-show="!sidebarOpen" class="fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity lg:hidden"
+            x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="sidebarOpen = false"
+            x-cloak></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar-container" :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}">
+            <div class="sidebar-header">
+                <div class="flex items-center space-x-2">
+                    <img src="images/neps_qr-logo.gif" alt="NEPS-QR Logo" class="h-8 w-auto">
+                    <span class="text-xl font-bold">NEPS-QR</span>
+                </div>
+                <button @click="sidebarOpen = false" class="lg:hidden">
+                    <i data-lucide="x" class="h-6 w-6"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link active">
+                    <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="transactions.html" class="sidebar-link">
+                    <i data-lucide="repeat" class="h-5 w-5"></i>
+                    <span>Transactions</span>
+                </a>
+                <a href="qr-management.html" class="sidebar-link">
+                    <i data-lucide="qr-code" class="h-5 w-5"></i>
+                    <span>QR Management</span>
+                </a>
+                <a href="analytics.html" class="sidebar-link">
+                    <i data-lucide="bar-chart-2" class="h-5 w-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="settings.html" class="sidebar-link">
+                    <i data-lucide="settings" class="h-5 w-5"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../business-login.html" class="sidebar-link text-red-500">
+                    <i data-lucide="log-out" class="h-5 w-5"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button @click="sidebarOpen = true" class="lg:hidden mr-2">
+                            <i data-lucide="menu" class="h-6 w-6"></i>
+                        </button>
+                        <h1 class="text-xl sm:text-2xl font-bold">Dashboard</h1>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open"
+                                class="relative p-1 rounded-full text-gray-600 hover:bg-gray-100">
+                                <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                                <i data-lucide="bell" class="h-6 w-6"></i>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                x-cloak>
+                                <div class="py-2 px-3 border-b border-gray-200">
+                                    <h3 class="text-sm font-semibold">Notifications</h3>
+                                </div>
+                                <div class="max-h-64 overflow-y-auto">
+                                    <a href="#" class="block px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 bg-green-100 rounded-full p-1">
+                                                <i data-lucide="check-circle" class="h-5 w-5 text-green-500"></i>
+                                            </div>
+                                            <div class="ml-3 w-0 flex-1">
+                                                <p class="text-sm font-medium text-gray-900">Payment received</p>
+                                                <p class="text-sm text-gray-500">You received ₦5,000 from John Doe</p>
+                                                <p class="text-xs text-gray-400 mt-1">2 minutes ago</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="block px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 bg-blue-100 rounded-full p-1">
+                                                <i data-lucide="user-plus" class="h-5 w-5 text-blue-500"></i>
+                                            </div>
+                                            <div class="ml-3 w-0 flex-1">
+                                                <p class="text-sm font-medium text-gray-900">New customer</p>
+                                                <p class="text-sm text-gray-500">Sarah Smith scanned your QR code</p>
+                                                <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="block px-4 py-3 hover:bg-gray-50">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0 bg-yellow-100 rounded-full p-1">
+                                                <i data-lucide="alert-triangle" class="h-5 w-5 text-yellow-500"></i>
+                                            </div>
+                                            <div class="ml-3 w-0 flex-1">
+                                                <p class="text-sm font-medium text-gray-900">System update</p>
+                                                <p class="text-sm text-gray-500">NEPS-QR will be updated tonight at 2 AM
+                                                </p>
+                                                <p class="text-xs text-gray-400 mt-1">5 hours ago</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="py-2 px-3 border-t border-gray-200 bg-gray-50">
+                                    <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500">View all
+                                        notifications</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center space-x-2">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile"
+                                    class="h-8 w-8 rounded-full">
+                                <span class="hidden md:inline-block font-medium">Adebayo Stores</span>
+                                <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                x-cloak>
+                                <div class="py-1">
+                                    <a href="settings.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <div class="flex items-center">
+                                            <i data-lucide="user" class="h-4 w-4 mr-2"></i>
+                                            <span>Profile</span>
+                                        </div>
+                                    </a>
+                                    <a href="settings.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <div class="flex items-center">
+                                            <i data-lucide="settings" class="h-4 w-4 mr-2"></i>
+                                            <span>Settings</span>
+                                        </div>
+                                    </a>
+                                    <a href="../business-login.html"
+                                        class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                        <div class="flex items-center">
+                                            <i data-lucide="log-out" class="h-4 w-4 mr-2"></i>
+                                            <span>Logout</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50">
+                <!-- Date Filter -->
+                <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <h2 class="text-lg font-semibold mb-2 sm:mb-0">Business Overview</h2>
+                    <div class="flex items-center space-x-2">
+                        <div class="relative">
+                            <input type="text" id="date-range-picker"
+                                class="form-input pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Select date range">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="calendar" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                        </div>
+                        <button class="btn-primary">
+                            <i data-lucide="filter" class="h-4 w-4 mr-1"></i>
+                            Filter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Total Revenue</p>
+                                <h3 class="text-2xl font-bold mt-1">₦125,400</h3>
+                                <p class="text-xs text-green-500 flex items-center mt-1">
+                                    <i data-lucide="trending-up" class="h-3 w-3 mr-1"></i>
+                                    <span>12.5% from last month</span>
+                                </p>
+                            </div>
+                            <div class="bg-blue-100 rounded-full p-3">
+                                <i data-lucide="dollar-sign" class="h-6 w-6 text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Transactions</p>
+                                <h3 class="text-2xl font-bold mt-1">243</h3>
+                                <p class="text-xs text-green-500 flex items-center mt-1">
+                                    <i data-lucide="trending-up" class="h-3 w-3 mr-1"></i>
+                                    <span>8.3% from last month</span>
+                                </p>
+                            </div>
+                            <div class="bg-purple-100 rounded-full p-3">
+                                <i data-lucide="repeat" class="h-6 w-6 text-purple-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Active QR Codes</p>
+                                <h3 class="text-2xl font-bold mt-1">12</h3>
+                                <p class="text-xs text-gray-500 flex items-center mt-1">
+                                    <span>Total generated: 15</span>
+                                </p>
+                            </div>
+                            <div class="bg-green-100 rounded-full p-3">
+                                <i data-lucide="qr-code" class="h-6 w-6 text-green-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">New Customers</p>
+                                <h3 class="text-2xl font-bold mt-1">18</h3>
+                                <p class="text-xs text-red-500 flex items-center mt-1">
+                                    <i data-lucide="trending-down" class="h-3 w-3 mr-1"></i>
+                                    <span>3.2% from last month</span>
+                                </p>
+                            </div>
+                            <div class="bg-orange-100 rounded-full p-3">
+                                <i data-lucide="users" class="h-6 w-6 text-orange-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Revenue Chart -->
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold">Revenue Overview</h3>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-sm text-gray-500 hover:text-blue-600 px-2 py-1 rounded"
+                                    :class="{'bg-blue-100 text-blue-600': chartPeriod === 'weekly'}"
+                                    @click="setChartPeriod('weekly')">Weekly</button>
+                                <button class="text-sm text-gray-500 hover:text-blue-600 px-2 py-1 rounded"
+                                    :class="{'bg-blue-100 text-blue-600': chartPeriod === 'monthly'}"
+                                    @click="setChartPeriod('monthly')">Monthly</button>
+                                <button class="text-sm text-gray-500 hover:text-blue-600 px-2 py-1 rounded"
+                                    :class="{'bg-blue-100 text-blue-600': chartPeriod === 'yearly'}"
+                                    @click="setChartPeriod('yearly')">Yearly</button>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Chart -->
+                    <div class="bg-white rounded-lg shadow-sm p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold">Transaction Types</h3>
+                            <button class="text-sm text-gray-500 hover:text-blue-600">
+                                <i data-lucide="download" class="h-4 w-4 inline-block"></i>
+                                Export
+                            </button>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="transactionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions & Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Recent Transactions -->
+                    <div class="lg:col-span-2 bg-white rounded-lg shadow-sm">
+                        <div class="p-5 border-b border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-semibold">Recent Transactions</h3>
+                                <a href="transactions.html" class="text-sm text-blue-600 hover:text-blue-800">View
+                                    All</a>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Customer</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Amount</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-8 w-8">
+                                                    <img class="h-8 w-8 rounded-full"
+                                                        src="https://randomuser.me/api/portraits/women/42.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Sarah Johnson</div>
+                                                    <div class="text-sm text-gray-500">sarah@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">₦3,500</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">Today, 10:24 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-8 w-8">
+                                                    <img class="h-8 w-8 rounded-full"
+                                                        src="https://randomuser.me/api/portraits/men/86.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Michael Obi</div>
+                                                    <div class="text-sm text-gray-500">michael@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">₦12,000</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">Today, 9:15 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-8 w-8">
+                                                    <img class="h-8 w-8 rounded-full"
+                                                        src="https://randomuser.me/api/portraits/women/24.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Amina Yusuf</div>
+                                                    <div class="text-sm text-gray-500">amina@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">₦8,750</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">Yesterday, 4:32 PM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-8 w-8">
+                                                    <img class="h-8 w-8 rounded-full"
+                                                        src="https://randomuser.me/api/portraits/men/54.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">David Adeleke</div>
+                                                    <div class="text-sm text-gray-500">david@example.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">₦5,200</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">Yesterday, 2:45 PM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <div class="p-5 border-b border-gray-100">
+                            <h3 class="font-semibold">Quick Actions</h3>
+                        </div>
+                        <div class="p-5 space-y-4">
+                            <a href="qr-management.html"
+                                class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                                <div class="bg-blue-100 rounded-full p-2 mr-3">
+                                    <i data-lucide="qr-code" class="h-5 w-5 text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium">Generate New QR Code</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Create a new payment QR code</p>
+                                </div>
+                            </a>
+
+                            <a href="transactions.html"
+                                class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                                <div class="bg-purple-100 rounded-full p-2 mr-3">
+                                    <i data-lucide="file-text" class="h-5 w-5 text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium">Export Transactions</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Download transaction history</p>
+                                </div>
+                            </a>
+
+                            <a href="analytics.html"
+                                class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                                <div class="bg-green-100 rounded-full p-2 mr-3">
+                                    <i data-lucide="bar-chart-2" class="h-5 w-5 text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium">View Analytics</h4>
+                                    <p class="text-xs text-gray-500 mt-1">See detailed business insights</p>
+                                </div>
+                            </a>
+
+                            <a href="settings.html"
+                                class="flex items-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                                <div class="bg-orange-100 rounded-full p-2 mr-3">
+                                    <i data-lucide="settings" class="h-5 w-5 text-orange-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium">Account Settings</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Update your business profile</p>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Quick QR Preview -->
+                        <div class="p-5 border-t border-gray-100">
+                            <h4 class="text-sm font-medium mb-3">Your Primary QR Code</h4>
+                            <div class="flex flex-col items-center">
+                                <div id="primary-qr-code" class="mb-2"></div>
+                                <p class="text-xs text-gray-500">Scan to receive payments</p>
+                                <div class="flex space-x-2 mt-3">
+                                    <button class="btn-sm bg-blue-50 text-blue-600 hover:bg-blue-100">
+                                        <i data-lucide="download" class="h-4 w-4 mr-1"></i>
+                                        Download
+                                    </button>
+                                    <button class="btn-sm bg-green-50 text-green-600 hover:bg-green-100">
+                                        <i data-lucide="share-2" class="h-4 w-4 mr-1"></i>
+                                        Share
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/business-dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+{
+    "name": "NEPS-QR Payment System",
+    "short_name": "NEPS-QR",
+    "description": "Cashless payment system that allows users to pay businesses by scanning QR codes",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0066FF",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "images/neps_qr-favicon.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "images/neps_qr-favicon.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "images/neps_qr-favicon.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "images/neps_qr-favicon.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "images/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "images/neps_qr-favicon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/neps_qr-favicon.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "images/neps_qr-favicon.pngng",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

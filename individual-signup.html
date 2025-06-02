@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NEPS-QR - Sign up for an individual account">
+    <meta name="theme-color" content="#FF6B00">
+    <title>NEPS-QR | Individual Sign Up</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/individual.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="individual.html" class="back-home">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Individual</span>
+                </a>
+                <div class="logo">
+                    <img src="images/nqr-logo.png" alt="NEPS-QR Logo">
+                    <span>NEPS-QR</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Signup Form Section -->
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>Individual Sign Up</h1>
+                    <p>Create your NEPS-QR individual account to start making payments</p>
+                </div>
+
+                <form id="individualSignupForm" class="auth-form">
+                    <div class="form-progress">
+                        <div class="progress-bar">
+                            <div class="progress" id="formProgress"></div>
+                        </div>
+                        <div class="progress-steps">
+                            <div class="step active" data-step="1">1</div>
+                            <div class="step" data-step="2">2</div>
+                            <div class="step" data-step="3">3</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step" id="step1">
+                        <h2>Personal Information</h2>
+
+                        <div class="form-group">
+                            <label for="fullName">Full Name (as on BVN) <span class="required">*</span></label>
+                            <input type="text" id="fullName" name="fullName" required>
+                            <div class="error-message" id="fullNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bvn">BVN <span class="required">*</span></label>
+                            <input type="text" id="bvn" name="bvn" maxlength="11"
+                                placeholder="Your 11-digit Bank Verification Number" required>
+                            <div class="error-message" id="bvnError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., 08012345678"
+                                required>
+                            <div class="error-message" id="phoneNumberError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="button" class="btn btn-primary next-btn" data-next="2">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Address & Location -->
+                    <div class="form-step" id="step2" style="display: none;">
+                        <h2>Address & Location</h2>
+
+                        <div class="form-group">
+                            <label for="address">Address <span class="required">*</span></label>
+                            <textarea id="address" name="address" rows="3" required></textarea>
+                            <div class="error-message" id="addressError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">State <span class="required">*</span></label>
+                            <select id="state" name="state" required>
+                                <option value="">Select a state</option>
+                                <option value="Abia">Abia</option>
+                                <option value="Adamawa">Adamawa</option>
+                                <option value="Akwa Ibom">Akwa Ibom</option>
+                                <option value="Anambra">Anambra</option>
+                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bayelsa">Bayelsa</option>
+                                <option value="Benue">Benue</option>
+                                <option value="Borno">Borno</option>
+                                <option value="Cross River">Cross River</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Ebonyi">Ebonyi</option>
+                                <option value="Edo">Edo</option>
+                                <option value="Ekiti">Ekiti</option>
+                                <option value="Enugu">Enugu</option>
+                                <option value="FCT">Federal Capital Territory</option>
+                                <option value="Gombe">Gombe</option>
+                                <option value="Imo">Imo</option>
+                                <option value="Jigawa">Jigawa</option>
+                                <option value="Kaduna">Kaduna</option>
+                                <option value="Kano">Kano</option>
+                                <option value="Katsina">Katsina</option>
+                                <option value="Kebbi">Kebbi</option>
+                                <option value="Kogi">Kogi</option>
+                                <option value="Kwara">Kwara</option>
+                                <option value="Lagos">Lagos</option>
+                                <option value="Nasarawa">Nasarawa</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Ogun">Ogun</option>
+                                <option value="Ondo">Ondo</option>
+                                <option value="Osun">Osun</option>
+                                <option value="Oyo">Oyo</option>
+                                <option value="Plateau">Plateau</option>
+                                <option value="Rivers">Rivers</option>
+                                <option value="Sokoto">Sokoto</option>
+                                <option value="Taraba">Taraba</option>
+                                <option value="Yobe">Yobe</option>
+                                <option value="Zamfara">Zamfara</option>
+                            </select>
+                            <div class="error-message" id="stateError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">City <span class="required">*</span></label>
+                            <input type="text" id="city" name="city" required>
+                            <div class="error-message" id="cityError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" id="detectLocationBtn" class="btn btn-secondary">
+                                <i class="fa-solid fa-location-dot"></i> Detect My Location
+                            </button>
+                            <div id="locationStatus" class="mt-2 text-sm"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="referralSource">How did you hear about us? <span
+                                    class="required">*</span></label>
+                            <select id="referralSource" name="referralSource" required>
+                                <option value="">Select an option</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Friend or Family">Friend or Family</option>
+                                <option value="Search Engine">Search Engine</option>
+                                <option value="TV or Radio">TV or Radio</option>
+                                <option value="Billboard">Billboard</option>
+                                <option value="Business Establishment">Business Establishment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="error-message" id="referralSourceError"></div>
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="button" class="btn btn-secondary prev-btn" data-prev="1">Previous</button>
+                            <button type="button" class="btn btn-primary next-btn" data-next="3">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Security -->
+                    <div class="form-step" id="step3" style="display: none;">
+                        <h2>Security</h2>
+
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <div class="password-input">
+                                <input type="password" id="password" name="password" required>
+                                <i class="fa-solid fa-eye toggle-password" data-target="password"></i>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-indicator" id="passwordStrength"></div>
+                                </div>
+                                <span class="strength-text" id="strengthText">Password strength</span>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                            <div class="password-input">
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                            </div>
+                            <div class="error-message" id="confirmPasswordError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transactionPin">4-Digit Transaction PIN <span class="required">*</span></label>
+                            <input type="password" id="transactionPin" name="transactionPin" maxlength="4"
+                                placeholder="Create a 4-digit PIN for transactions" required>
+                            <div class="error-message" id="transactionPinError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPin">Confirm Transaction PIN <span class="required">*</span></label>
+                            <input type="password" id="confirmPin" name="confirmPin" maxlength="4" required>
+                            <div class="error-message" id="confirmPinError"></div>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="termsAgreement" name="termsAgreement" required>
+                            <label for="termsAgreement">I agree to the <a href="terms.html" target="_blank">Terms of
+                                    Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></label>
+                            <div class="error-message" id="termsAgreementError"></div>
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="button" class="btn btn-secondary prev-btn" data-prev="2">Previous</button>
+                            <button type="submit" class="btn btn-primary">Create Account</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="individual-login.html">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="auth-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 NEPS-QR. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/individual-auth.js"></script>
+</body>
+
+</html>

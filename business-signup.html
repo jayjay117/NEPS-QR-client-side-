@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NEPS-QR - Sign up your business for cashless payments">
+    <meta name="theme-color" content="#0066FF">
+    <title>NEPS-QR | Business Sign Up</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/data/manifest.json">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/business.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="business.html" class="back-home">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Business</span>
+                </a>
+                <div class="logo">
+                    <img src="images/neps_qr-logo.gif" alt="NEPS-QR Logo">
+                    <span>NEPS-QR</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Signup Form Section -->
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>Business Sign Up</h1>
+                    <p>Create your NEPS-QR business account to start accepting payments</p>
+                </div>
+
+                <form id="businessSignupForm" class="auth-form">
+                    <div class="form-progress">
+                        <div class="progress-bar">
+                            <div class="progress" id="formProgress"></div>
+                        </div>
+                        <div class="progress-steps">
+                            <div class="step active" data-step="1">1</div>
+                            <div class="step" data-step="2">2</div>
+                            <div class="step" data-step="3">3</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step" id="step1">
+                        <h2>Personal Information</h2>
+
+                        <div class="form-group">
+                            <label for="fullName">Full Name <span class="required">*</span></label>
+                            <input type="text" id="fullName" name="fullName" required>
+                            <div class="error-message" id="fullNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., 08012345678"
+                                required>
+                            <div class="error-message" id="phoneNumberError"></div>
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="button" class="btn btn-primary next-btn" data-next="2">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Business Information -->
+                    <div class="form-step" id="step2" style="display: none;">
+                        <h2>Business Information</h2>
+
+                        <div class="form-group">
+                            <label for="businessName">Business Name <span class="required">*</span></label>
+                            <input type="text" id="businessName" name="businessName" required>
+                            <div class="error-message" id="businessNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="businessCategory">Business Category <span class="required">*</span></label>
+                            <select id="businessCategory" name="businessCategory" required>
+                                <option value="">Select a category</option>
+                                <option value="retail">Retail</option>
+                                <option value="food">Food & Beverage</option>
+                                <option value="services">Services</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="education">Education</option>
+                                <option value="technology">Technology</option>
+                                <option value="transportation">Transportation</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message" id="businessCategoryError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="businessLocation">Business Location <span class="required">*</span></label>
+                            <select id="businessLocation" name="businessLocation" required>
+                                <option value="">Select a state</option>
+                                <option value="Abia">Abia</option>
+                                <option value="Adamawa">Adamawa</option>
+                                <option value="Akwa Ibom">Akwa Ibom</option>
+                                <option value="Anambra">Anambra</option>
+                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bayelsa">Bayelsa</option>
+                                <option value="Benue">Benue</option>
+                                <option value="Borno">Borno</option>
+                                <option value="Cross River">Cross River</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Ebonyi">Ebonyi</option>
+                                <option value="Edo">Edo</option>
+                                <option value="Ekiti">Ekiti</option>
+                                <option value="Enugu">Enugu</option>
+                                <option value="FCT">Federal Capital Territory</option>
+                                <option value="Gombe">Gombe</option>
+                                <option value="Imo">Imo</option>
+                                <option value="Jigawa">Jigawa</option>
+                                <option value="Kaduna">Kaduna</option>
+                                <option value="Kano">Kano</option>
+                                <option value="Katsina">Katsina</option>
+                                <option value="Kebbi">Kebbi</option>
+                                <option value="Kogi">Kogi</option>
+                                <option value="Kwara">Kwara</option>
+                                <option value="Lagos">Lagos</option>
+                                <option value="Nasarawa">Nasarawa</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Ogun">Ogun</option>
+                                <option value="Ondo">Ondo</option>
+                                <option value="Osun">Osun</option>
+                                <option value="Oyo">Oyo</option>
+                                <option value="Plateau">Plateau</option>
+                                <option value="Rivers">Rivers</option>
+                                <option value="Sokoto">Sokoto</option>
+                                <option value="Taraba">Taraba</option>
+                                <option value="Yobe">Yobe</option>
+                                <option value="Zamfara">Zamfara</option>
+                            </select>
+                            <div class="error-message" id="businessLocationError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tinNumber">TIN Number <span class="optional">(optional)</span></label>
+                            <input type="text" id="tinNumber" name="tinNumber">
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="button" class="btn btn-secondary prev-btn" data-prev="1">Previous</button>
+                            <button type="button" class="btn btn-primary next-btn" data-next="3">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Banking & Security -->
+                    <div class="form-step" id="step3" style="display: none;">
+                        <h2>Banking & Security</h2>
+
+                        <div class="form-group">
+                            <label for="bankName">Bank Name <span class="required">*</span></label>
+                            <select id="bankName" name="bankName" required>
+                                <option value="">Select a bank</option>
+                                <option value="Access Bank">Access Bank</option>
+                                <option value="Fidelity Bank">Fidelity Bank</option>
+                                <option value="First Bank">First Bank</option>
+                                <option value="First City Monument Bank">First City Monument Bank (FCMB)</option>
+                                <option value="Guaranty Trust Bank">Guaranty Trust Bank (GTB)</option>
+                                <option value="Polaris Bank">Polaris Bank</option>
+                                <option value="Stanbic IBTC">Stanbic IBTC</option>
+                                <option value="Sterling Bank">Sterling Bank</option>
+                                <option value="Union Bank">Union Bank</option>
+                                <option value="United Bank for Africa">United Bank for Africa (UBA)</option>
+                                <option value="Unity Bank">Unity Bank</option>
+                                <option value="Wema Bank">Wema Bank</option>
+                                <option value="Zenith Bank">Zenith Bank</option>
+                            </select>
+                            <div class="error-message" id="bankNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accountNumber">Account Number <span class="required">*</span></label>
+                            <input type="text" id="accountNumber" name="accountNumber" maxlength="10" required>
+                            <div class="error-message" id="accountNumberError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pin">4-Digit PIN <span class="required">*</span></label>
+                            <input type="password" id="pin" name="pin" maxlength="4" required>
+                            <div class="error-message" id="pinError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <div class="password-input">
+                                <input type="password" id="password" name="password" required>
+                                <i class="fa-solid fa-eye toggle-password" data-target="password"></i>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-indicator" id="passwordStrength"></div>
+                                </div>
+                                <span class="strength-text" id="strengthText">Password strength</span>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                            <div class="password-input">
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                            </div>
+                            <div class="error-message" id="confirmPasswordError"></div>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="termsAgreement" name="termsAgreement" required>
+                            <label for="termsAgreement">I agree to the <a href="terms.html" target="_blank">Terms of
+                                    Service</a> and <a href="privacy.html" target="_blank">Terms of Use</a></label>
+                            <div class="error-message" id="termsAgreementError"></div>
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="button" class="btn btn-secondary prev-btn" data-prev="2">Previous</button>
+                            <button type="submit" class="btn btn-primary">Create Account</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="business-login.html">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="auth-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 NEPS-QR. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/business-auth.js"></script>
+</body>
+
+</html>

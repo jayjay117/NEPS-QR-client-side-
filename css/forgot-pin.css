@@ -1,0 +1,117 @@
+/* Additional styles for forgot-pin page */
+
+.verification-code-container {
+    position: relative;
+}
+
+.verification-code-container input {
+    text-align: center;
+    letter-spacing: 8px;
+    font-size: 1.5rem;
+    width: 100%;
+}
+
+.info-text {
+    background-color: #f0f9ff;
+    border-left: 3px solid #0ea5e9;
+    padding: 10px 15px;
+    color: #555;
+    font-size: 0.9rem;
+    border-radius: 4px;
+}
+
+.info-text i {
+    color: #0ea5e9;
+    margin-right: 8px;
+}
+
+.resend-code {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.resend-code button {
+    background: none;
+    border: none;
+    color: #ff6b00;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0;
+}
+
+.resend-code button:hover {
+    text-decoration: underline;
+}
+
+#resendCountdown {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+.success-message {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #4caf50;
+    margin-bottom: 20px;
+}
+
+.success-message h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.success-message p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #ff6b00;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading-overlay p {
+    color: white;
+    font-size: 1.2rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .verification-code-container input {
+        font-size: 1.2rem;
+    }
+}

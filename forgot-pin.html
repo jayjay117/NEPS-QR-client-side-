@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NEPS-QR - Reset your transaction PIN">
+    <meta name="theme-color" content="#FF6B00">
+    <title>NEPS-QR | Forgot PIN</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- EmailJS Library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init({
+                publicKey: "v1Imcn_X1eIzqmrWd",
+            });
+        })();
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="auth-gateway.html" class="back-home">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Login</span>
+                </a>
+                <div class="logo">
+                    <img src="images/nqr-logo.png" alt="NEPS-QR Logo">
+                    <span>NEPS-QR</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Forgot PIN Form Section -->
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>Reset Your PIN</h1>
+                    <p>We'll help you reset your transaction PIN</p>
+                </div>
+
+                <!-- Progress indicator -->
+                <div class="form-progress">
+                    <div class="progress-bar">
+                        <div class="progress" id="resetProgress" style="width: 33.33%;"></div>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="step active" data-step="1">1</div>
+                        <div class="step" data-step="2">2</div>
+                        <div class="step" data-step="3">3</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Email Form -->
+                <form id="emailForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address <span class="required">*</span></label>
+                        <input type="email" id="resetEmail" name="resetEmail" required>
+                        <div class="error-message" id="resetEmailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <p class="info-text">
+                            <i class="fa-solid fa-info-circle"></i>
+                            Enter the email address associated with your account. We'll send you a verification code.
+                        </p>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary" id="sendCodeBtn">
+                            <span>Send Verification Code</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Step 2: Verification Code Form (Hidden initially) -->
+                <form id="verificationForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="verificationCode">Verification Code <span class="required">*</span></label>
+                        <div class="verification-code-container">
+                            <input type="text" id="verificationCode" name="verificationCode" maxlength="6" required>
+                        </div>
+                        <div class="error-message" id="verificationCodeError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <p class="info-text">
+                            <i class="fa-solid fa-info-circle"></i>
+                            Enter the 6-digit verification code sent to your email.
+                        </p>
+                    </div>
+
+                    <div class="resend-code">
+                        <p>Didn't receive the code? <button type="button" id="resendCodeBtn">Resend Code</button></p>
+                        <div id="resendCountdown" style="display: none;">Resend code in <span
+                                id="countdownTime">60</span> seconds</div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary back-btn" id="backToEmailBtn">Back</button>
+                        <button type="submit" class="btn btn-primary">Verify Code</button>
+                    </div>
+                </form>
+
+                <!-- Step 3: New PIN Form (Hidden initially) -->
+                <form id="newPinForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="newPin">New 4-Digit PIN <span class="required">*</span></label>
+                        <input type="password" id="newPin" name="newPin" maxlength="4" required>
+                        <div class="error-message" id="newPinError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmNewPin">Confirm New PIN <span class="required">*</span></label>
+                        <input type="password" id="confirmNewPin" name="confirmNewPin" maxlength="4" required>
+                        <div class="error-message" id="confirmNewPinError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <p class="info-text">
+                            <i class="fa-solid fa-info-circle"></i>
+                            Create a new 4-digit PIN that you'll use for authorizing transactions.
+                        </p>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary back-btn"
+                            id="backToVerificationBtn">Back</button>
+                        <button type="submit" class="btn btn-primary">Reset PIN</button>
+                    </div>
+                </form>
+
+                <!-- Success Message (Hidden initially) -->
+                <div id="successMessage" style="display: none;" class="success-message">
+                    <div class="success-icon">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                    <h2>PIN Reset Successful!</h2>
+                    <p>Your transaction PIN has been reset successfully.</p>
+                    <div class="form-buttons">
+                        <a href="individual-login.html" class="btn btn-primary">Go to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="auth-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 NEPS-QR. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Processing, please wait...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/forgot.pin.js"></script>
+</body>
+
+</html>

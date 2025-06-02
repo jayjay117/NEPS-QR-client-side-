@@ -1,0 +1,181 @@
+/* Auth Gateway Page Styles */
+
+.auth-gateway-section {
+    padding: 150px 0 80px;
+    min-height: calc(100vh - 200px);
+    background-color: var(--background-light);
+}
+
+.gateway-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.gateway-header h1 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+.gateway-header p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.account-types {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.account-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.account-icon {
+    width: 100px;
+    height: 100px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+}
+
+.account-icon i {
+    font-size: 3rem;
+    color: white;
+}
+
+.account-card h2 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+.account-card p {
+    color: var(--text-light);
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.account-features {
+    margin-bottom: 30px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.feature i {
+    color: var(--success-color);
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.feature span {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.account-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.account-actions .btn {
+    min-width: 120px;
+}
+
+/* Business Card Specific Styles */
+.account-card:first-child .account-icon {
+    background-color: #0066ff;
+}
+
+/* Individual Card Specific Styles */
+.account-card:last-child .account-icon {
+    background-color: #ff6b00;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .account-types {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .account-card {
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-gateway-section {
+        padding: 130px 0 60px;
+    }
+
+    .gateway-header h1 {
+        font-size: 2rem;
+    }
+
+    .account-card {
+        padding: 30px;
+    }
+
+    .account-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .account-icon i {
+        font-size: 2.5rem;
+    }
+
+    .account-card h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-gateway-section {
+        padding: 110px 0 40px;
+    }
+
+    .gateway-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .gateway-header p {
+        font-size: 1rem;
+    }
+
+    .account-card {
+        padding: 25px 20px;
+    }
+
+    .account-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .account-actions .btn {
+        width: 100%;
+    }
+}

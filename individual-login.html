@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NEPS-QR - Login to your individual account">
+    <meta name="theme-color" content="#FF6B00">
+    <title>NEPS-QR | Individual Login</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/individual.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="individual.html" class="back-home">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Individual</span>
+                </a>
+                <div class="logo">
+                    <img src="images/nqr-logo.png" alt="NEPS-QR Logo">
+                    <span>NEPS-QR</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Login Form Section -->
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>Individual Login</h1>
+                    <p>Access your NEPS-QR individual account</p>
+                </div>
+
+                <!-- Auth Method Selection -->
+                <div id="authMethodSelection" class="auth-method-selection">
+                    <p class="auth-method-prompt">How would you like to login?</p>
+
+                    <div class="auth-method-options">
+                        <button id="passwordMethodBtn" class="auth-method-btn active">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Password</span>
+                        </button>
+                        <button id="pinMethodBtn" class="auth-method-btn">
+                            <i class="fa-solid fa-key"></i>
+                            <span>4-Digit PIN</span>
+                        </button>
+                    </div>
+
+                    <div class="form-progress">
+                        <div class="progress-bar">
+                            <div class="progress" id="loginProgress" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Login Form -->
+                <form id="passwordLoginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address <span class="required">*</span></label>
+                        <input type="email" id="loginEmail" name="loginEmail" required>
+                        <div class="error-message" id="loginEmailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password <span class="required">*</span></label>
+                        <div class="password-input">
+                            <input type="password" id="loginPassword" name="loginPassword" required>
+                            <i class="fa-solid fa-eye toggle-password" data-target="loginPassword"></i>
+                        </div>
+                        <div class="error-message" id="loginPasswordError"></div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+
+                    <div class="form-links">
+                        <a href="forgot-pin.html">Forgot Password?</a>
+                    </div>
+                </form>
+
+                <!-- PIN Login Form (Hidden by default) -->
+                <form id="pinLoginForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="pinLoginEmail">Email Address <span class="required">*</span></label>
+                        <input type="email" id="pinLoginEmail" name="pinLoginEmail" required>
+                        <div class="error-message" id="pinLoginEmailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPin">4-Digit PIN <span class="required">*</span></label>
+                        <div class="pin-input-container">
+                            <input type="password" id="loginPin" name="loginPin" maxlength="4" required>
+                        </div>
+                        <div class="error-message" id="loginPinError"></div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="rememberMePin" name="rememberMePin">
+                        <label for="rememberMePin">Remember me</label>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+
+                    <div class="form-links">
+                        <a href="forgot-pin.html">Forgot PIN?</a>
+                    </div>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="individual-signup.html">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="auth-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 NEPS-QR. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/individual-auth.js"></script>
+</body>
+
+</html>

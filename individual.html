@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NEPS-QR - Individual payment solutions for Nigerian consumers">
+    <meta name="theme-color" content="#FF6B00">
+    <title>NEPS-QR | Individual Solutions</title>
+
+    <link rel="icon" href="images/neps_qr-favicon.png" type="image/png">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="data/manifest.json">
+    <link rel="icon" href="images/neps_qr-favicon.png" type="image/png">>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- AOS Animation Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fff8f0',
+                            100: '#ffe8d4',
+                            200: '#ffd0a9',
+                            300: '#ffb173',
+                            400: '#ff8c3d',
+                            500: '#ff6b00',
+                            600: '#ff5500',
+                            700: '#cc4400',
+                            800: '#a63800',
+                            900: '#873000',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/individual.css">
+</head>
+
+<body>
+    <!-- Floating Bubbles Background -->
+    <div class="bubbles-container">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="back-home">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <div class="logo">
+                    <img src="images/neps_qr-logo.gif" alt="NEPS-QR Logo">
+                    <span>NEPS-QR</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="individual-hero">
+        <div class="container">
+            <div class="individual-hero-content">
+                <div class="individual-hero-text" data-aos="fade-right" data-aos-duration="1000">
+                    <h1>Simplify Your <span class="highlight">Payments</span></h1>
+                    <p>Experience the convenience of cashless payments with NEPS-QR. Scan, pay, and go - it's that
+                        simple!</p>
+                    <div class="cta-buttons">
+                        <a href="individual-signup.html" class="btn btn-primary">Sign Up</a>
+                        <a href="individual-login.html" class="btn btn-secondary">Login</a>
+                    </div>
+                </div>
+                <div class="individual-hero-image" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="hero-animation-container">
+                        <div class="phone-mockup animate">
+                            <div class="phone-frame">
+                                <div class="phone-screen">
+                                    <div class="app-interface">
+                                        <div class="app-header">
+                                            <div class="app-logo"></div>
+                                            <div class="app-title">NEPS-QR</div>
+                                        </div>
+                                        <div class="app-balance">
+                                            <div class="balance-label">Wallet Balance</div>
+                                            <div class="balance-amount">₦24,500.00</div>
+                                        </div>
+                                        <div class="app-actions">
+                                            <div class="action-button">
+                                                <i class="fa-solid fa-qrcode"></i>
+                                                <span>Scan</span>
+                                            </div>
+                                            <div class="action-button">
+                                                <i class="fa-solid fa-wallet"></i>
+                                                <span>Fund</span>
+                                            </div>
+                                            <div class="action-button">
+                                                <i class="fa-solid fa-history"></i>
+                                                <span>History</span>
+                                            </div>
+                                        </div>
+                                        <div class="app-transactions">
+                                            <div class="transaction-item">
+                                                <div class="transaction-icon">
+                                                    <i class="fa-solid fa-shopping-bag"></i>
+                                                </div>
+                                                <div class="transaction-details">
+                                                    <div class="transaction-name">Grocery Store</div>
+                                                    <div class="transaction-date">Today, 2:30 PM</div>
+                                                </div>
+                                                <div class="transaction-amount">-₦2,500</div>
+                                            </div>
+                                            <div class="transaction-item">
+                                                <div class="transaction-icon">
+                                                    <i class="fa-solid fa-utensils"></i>
+                                                </div>
+                                                <div class="transaction-details">
+                                                    <div class="transaction-name">Restaurant</div>
+                                                    <div class="transaction-date">Yesterday</div>
+                                                </div>
+                                                <div class="transaction-amount">-₦4,200</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="qr-code-floating">
+                                <div class="qr-code-frame"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wave-divider">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#f8f9fa" fill-opacity="1"
+                    d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                </path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="individual-features">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Why Choose NEPS-QR</h2>
+                <p>The smarter way to pay</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div>
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <h3>Scan & Pay</h3>
+                        <p>Simply scan any merchant's QR code and complete your payment in seconds.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div>
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <h3>Digital Wallet</h3>
+                        <p>Store funds securely in your digital wallet for quick and easy payments.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div>
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <h3>Instant Transactions</h3>
+                        <p>No waiting for bank transfers to clear. Payments are processed instantly.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div>
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+                        <h3>Expense Tracking</h3>
+                        <p>Monitor your spending habits with detailed transaction history and reports.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div>
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                        <h3>Instant Notifications</h3>
+                        <p>Receive real-time alerts for all transactions to stay informed.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+                    <div>
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-wifi-slash"></i>
+                        </div>
+                        <h3>Offline Mode</h3>
+                        <p>Make payments even without internet connection with our offline mode.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="individual-how-it-works">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>How It Works For Individuals</h2>
+                <p>Simple, secure, and straightforward</p>
+            </div>
+            <div class="steps-container max-w-3xl mx-auto">
+                <!-- Step 1 -->
+                <div class="step-card" data-aos="fade-right">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <h3>Create Account</h3>
+                        <p>Sign up with your basic information and create a secure PIN for transactions.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card" data-aos="fade-left">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <h3>Fund Your Wallet</h3>
+                        <p>Add money to your wallet using bank transfers, cards, or other payment methods.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card" data-aos="fade-right">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <h3>Scan & Pay</h3>
+                        <p>Scan any merchant's QR code, enter the amount, and confirm with your PIN.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card" data-aos="fade-left">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <h3>Get Receipt</h3>
+                        <p>Receive digital receipts for all your transactions for easy record keeping.</p>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step-card" data-aos="fade-right">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3>Track Spending</h3>
+                        <p>Monitor your transaction history and manage your finances with detailed reports.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="individual-benefits">
+        <div class="container">
+            <div class="benefits-content">
+                <div class="benefits-image" data-aos="fade-right">
+                    <img src="images/individual-benefits.png" alt="NEPS-QR Benefits" class="benefits-illustration">
+                </div>
+                <div class="benefits-text" data-aos="fade-left">
+                    <h2>Experience the Benefits</h2>
+                    <p>Join thousands of Nigerians who are enjoying the convenience and security of NEPS-QR payments.
+                    </p>
+
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div class="benefit-details">
+                                <h3>Fast Transactions</h3>
+                                <p>Complete payments in seconds, no waiting in line or for bank transfers to clear.</p>
+                            </div>
+                        </div>
+
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div class="benefit-details">
+                                <h3>Secure Payments</h3>
+                                <p>PIN-protected transactions and encrypted data keep your money and information safe.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div class="benefit-details">
+                                <h3>Track Spending</h3>
+                                <p>Monitor your transaction history and manage your finances with detailed reports.</p>
+                            </div>
+                        </div>
+
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fa-solid fa-wifi"></i>
+                            </div>
+                            <div class="benefit-details">
+                                <h3>Works Offline</h3>
+                                <p>Make payments even without internet connection with our offline mode feature.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section class="get-started">
+        <div class="container">
+            <div class="get-started-content" data-aos="zoom-in">
+                <h2>Ready to Experience Cashless Payments?</h2>
+                <p>Join thousands of users already enjoying the benefits of NEPS-QR</p>
+                <div class="get-started-buttons">
+                    <a href="individual-signup.html" class="btn btn-primary">Sign Up Now</a>
+                    <a href="individual-login.html" class="btn btn-secondary">Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="images/nqr-logo.png" alt="NEPS-QR Logo">
+                    <h3>NEPS-QR</h3>
+                    <p>A product of Innovative Technologies</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Products</h4>
+                        <ul>
+                            <li><a href="business.html">For Business</a></li>
+                            <li><a href="individual.html">For Individuals</a></li>
+                            <li><a href="enterprise.html">Enterprise Solutions</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="help.html">Help Center</a></li>
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <div class="social-icons">
+                            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 NEPS-QR. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="js/individual.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+
+</html>
