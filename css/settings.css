@@ -1,0 +1,317 @@
+/* Settings-specific styles that extend the dashboard styles */
+
+/* Toggle Switch Styles */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+input:checked+.toggle-slider {
+    background-color: #2563eb;
+}
+
+input:focus+.toggle-slider {
+    box-shadow: 0 0 1px #2563eb;
+}
+
+input:checked+.toggle-slider:before {
+    transform: translateX(20px);
+}
+
+/* Tab Styles */
+[data-tab-target] {
+    transition: all 0.2s ease-in-out;
+}
+
+[data-tab-target]:hover {
+    background-color: #f8fafc;
+}
+
+[data-tab-target].active {
+    background-color: #dbeafe;
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+/* Form Enhancements */
+.form-input {
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-input.error {
+    border-color: #ef4444;
+}
+
+.form-input.error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Field Error Styles */
+.field-error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Button Enhancements */
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Card Hover Effects */
+.bg-white {
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.bg-white:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Bank Account Cards */
+.bg-gray-50 {
+    transition: all 0.15s ease-in-out;
+}
+
+.bg-gray-50:hover {
+    background-color: #f1f5f9;
+}
+
+/* Notification Cards */
+.notification-item {
+    transition: background-color 0.15s ease-in-out;
+}
+
+.notification-item:hover {
+    background-color: #f8fafc;
+}
+
+/* Loading Overlay */
+#loading-overlay {
+    backdrop-filter: blur(4px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .toggle-switch {
+        width: 40px;
+        height: 22px;
+    }
+
+    .toggle-slider:before {
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+    }
+
+    input:checked+.toggle-slider:before {
+        transform: translateX(18px);
+    }
+
+    [data-tab-target] {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* PIN Input Styling */
+input[maxlength="4"] {
+    text-align: center;
+    font-family: monospace;
+    letter-spacing: 0.1em;
+}
+
+/* Success/Error States */
+.success-state {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+.error-state {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+/* Animation for notifications */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification-enter {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.notification-exit {
+    animation: slideOutRight 0.3s ease-in;
+}
+
+/* Focus states for accessibility */
+.toggle-switch input:focus+.toggle-slider {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+button:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Sidebar active state */
+.sidebar-link.active {
+    background-color: #dbeafe;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.sidebar-link.active i {
+    color: #2563eb;
+}
+
+/* Custom scrollbar for settings content */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Print styles for settings */
+@media print {
+
+    .sidebar-container,
+    header,
+    [data-tab-target],
+    .btn-primary,
+    .btn-secondary {
+        display: none !important;
+    }
+
+    [data-tab-content] {
+        display: block !important;
+    }
+
+    .bg-white {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb !important;
+    }
+}
