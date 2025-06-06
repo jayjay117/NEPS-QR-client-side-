@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay a Business - NEPS-QR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        #qr-reader {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #qr-reader__dashboard_section {
+            display: none !important;
+        }
+
+        #qr-reader video {
+            border-radius: 8px;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        .step.active {
+            background-color: #f97316;
+            color: white;
+        }
+
+        .step.inactive {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background-color: #e5e7eb;
+            margin: 0 0.5rem;
+        }
+
+        .step-line.active {
+            background-color: #f97316;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-4 py-3">
+            <div class="flex items-center gap-4">
+                <button onclick="goBack()" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-semibold">Pay a Business</h1>
+                    <p class="text-sm text-gray-500">Scan QR code to make payment</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4">
+            <div class="max-w-md mx-auto space-y-6">
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step-line" id="line1"></div>
+                    <div class="step inactive" id="step2">2</div>
+                    <div class="step-line" id="line2"></div>
+                    <div class="step inactive" id="step3">3</div>
+                </div>
+
+                <!-- Step 1: Scan QR Code -->
+                <div id="scanStep" class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-qrcode text-orange-500"></i>
+                        <h2 class="text-lg font-semibold">Scan QR Code</h2>
+                    </div>
+
+                    <div id="scannerContainer" class="space-y-4">
+                        <div id="cameraView" class="text-center space-y-4 hidden">
+                            <div id="qr-reader" class="w-full"></div>
+                            <p class="text-sm text-gray-500">Point your camera at the QR code</p>
+                            <button onclick="stopScanner()"
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                                <i class="fas fa-times mr-2"></i>
+                                Stop Camera
+                            </button>
+                        </div>
+
+                        <div id="scanPrompt" class="text-center space-y-4">
+                            <div class="w-32 h-32 mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-camera text-gray-400 text-4xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-500">Position the QR code within the camera frame</p>
+                            <button onclick="startScanner()"
+                                class="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 font-medium">
+                                <i class="fas fa-camera mr-2"></i>
+                                Start Camera
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="errorMessage" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center gap-2 text-red-600">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="errorText"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Payment Details -->
+                <div id="detailsStep" class="bg-white rounded-lg shadow p-6 hidden">
+                    <h2 class="text-lg font-semibold mb-4">Payment Details</h2>
+
+                    <div id="merchantInfo" class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <!-- Merchant info will be populated here -->
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Amount (₦)</label>
+                            <input type="number" id="amount" placeholder="0.00" step="0.01" min="0"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+
+                        <div>
+                            <label for="purpose" class="block text-sm font-medium text-gray-700 mb-1">Purpose <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="purpose" placeholder="What is this payment for?"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div id="detailsError" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center gap-2 text-red-600">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="detailsErrorText"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mt-6">
+                        <button onclick="goToScanStep()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            Back
+                        </button>
+                        <button onclick="goToPinStep()"
+                            class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: PIN Confirmation -->
+                <div id="pinStep" class="bg-white rounded-lg shadow p-6 hidden">
+                    <h2 class="text-lg font-semibold mb-4">Confirm Payment</h2>
+
+                    <div id="paymentSummary" class="bg-gray-50 p-4 rounded-lg mb-4 space-y-2">
+                        <!-- Payment summary will be populated here -->
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="pin" class="block text-sm font-medium text-gray-700 mb-1">Enter your 4-digit
+                                PIN</label>
+                            <input type="password" id="pin" placeholder="••••" maxlength="4"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg tracking-widest">
+                        </div>
+                    </div>
+
+                    <div id="pinError" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center gap-2 text-red-600">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="pinErrorText"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mt-6">
+                        <button onclick="goToDetailsStep()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            Back
+                        </button>
+                        <button onclick="processPayment()" id="payButton"
+                            class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                            Pay Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Success Step -->
+                <div id="successStep" class="bg-white rounded-lg shadow p-6 text-center hidden">
+                    <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-green-600 mb-2">Payment Successful!</h2>
+                    <div id="successAmount" class="text-2xl font-bold mb-2"></div>
+                    <div id="successMerchant" class="text-gray-600 mb-6"></div>
+
+                    <div class="flex gap-2">
+                        <button onclick="window.location.href='individual-transactions.html'"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            View Receipt
+                        </button>
+                        <button onclick="window.location.href='individual-dashboard.html'"
+                            class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                            Done
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/individual-pay.js"></script>
+</body>
+
+</html>

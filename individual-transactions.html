@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - NEPS-QR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .transaction-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .filter-active {
+            background-color: #f97316;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-4 py-3">
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='individual-dashboard.html'" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-semibold">Transaction History</h1>
+                    <p class="text-sm text-gray-500">View all your payments and transfers</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-4">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow p-4">
+                    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="filterTransactions('all')" id="filterAll"
+                                class="filter-btn px-3 py-1 text-sm rounded-full border filter-active">
+                                All
+                            </button>
+                            <button onclick="filterTransactions('payment')" id="filterPayment"
+                                class="filter-btn px-3 py-1 text-sm rounded-full border hover:bg-gray-50">
+                                Payments
+                            </button>
+                            <button onclick="filterTransactions('received')" id="filterReceived"
+                                class="filter-btn px-3 py-1 text-sm rounded-full border hover:bg-gray-50">
+                                Received
+                            </button>
+                            <button onclick="filterTransactions('funding')" id="filterFunding"
+                                class="filter-btn px-3 py-1 text-sm rounded-full border hover:bg-gray-50">
+                                Funding
+                            </button>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <select id="dateFilter" onchange="filterByDate()"
+                                class="px-3 py-1 text-sm border rounded-lg focus:ring-2 focus:ring-orange-500">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                            <button onclick="exportTransactions()"
+                                class="px-3 py-1 text-sm border rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-download mr-1"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaction Summary -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-arrow-down-left text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Received</p>
+                                <p class="text-lg font-semibold text-green-600" id="totalReceived">₦0.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-arrow-up-right text-red-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Spent</p>
+                                <p class="text-lg font-semibold text-red-600" id="totalSpent">₦0.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-receipt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Transactions</p>
+                                <p class="text-lg font-semibold text-blue-600" id="totalTransactions">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions List -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h3 class="text-lg font-semibold">Transactions</h3>
+                    </div>
+                    <div id="transactionsList" class="divide-y">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden p-8 text-center">
+                        <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-receipt text-gray-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No transactions found</h3>
+                        <p class="text-gray-500">You haven't made any transactions yet</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loadingState" class="p-8">
+                        <div class="animate-pulse space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                <div class="flex-1 space-y-2">
+                                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                                    <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                                </div>
+                                <div class="h-4 bg-gray-200 rounded w-20"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load More Button -->
+                <div id="loadMoreContainer" class="text-center hidden">
+                    <button onclick="loadMoreTransactions()" id="loadMoreBtn"
+                        class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Load More
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="individual-transactions.html"></script>
+</body>
+
+</html>

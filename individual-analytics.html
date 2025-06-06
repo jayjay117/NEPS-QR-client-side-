@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - NEPS-QR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar-overlay {
+            display: none;
+        }
+
+        .sidebar-open .sidebar-overlay {
+            display: block;
+        }
+
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-open .sidebar {
+            transform: translateX(0);
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-50 lg:transform-none">
+        <div class="flex flex-col h-full">
+            <!-- Sidebar Header -->
+            <div class="flex items-center gap-3 p-6 border-b">
+                <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-qrcode text-white text-lg"></i>
+                </div>
+                <span class="font-bold text-xl">NEPS-QR</span>
+                <button class="ml-auto lg:hidden" onclick="toggleSidebar()">
+                    <i class="fas fa-times text-gray-500"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="individual-dashboard.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-home"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-pay.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-qrcode"></i>
+                            Pay a Business
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-wallet.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-wallet"></i>
+                            Wallet
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-transactions.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-history"></i>
+                            Transactions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-cards.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-credit-card"></i>
+                            Cards
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-analytics.html"
+                            class="flex items-center gap-3 p-3 rounded-lg bg-orange-50 text-orange-700 font-medium">
+                            <i class="fas fa-chart-pie"></i>
+                            Analytics
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-settings.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="border-t p-4">
+                <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    onclick="toggleUserMenu()">
+                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                        <span class="text-orange-700 font-medium text-sm" id="userInitials">U</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm truncate" id="userName">User</div>
+                        <div class="text-xs text-gray-500 truncate" id="userEmail">user@example.com</div>
+                    </div>
+                    <i class="fas fa-chevron-up text-gray-400"></i>
+                </div>
+
+                <!-- User Menu Dropdown -->
+                <div id="userMenu" class="hidden mt-2 space-y-1">
+                    <a href="profile.html" class="flex items-center gap-2 p-2 text-sm rounded hover:bg-gray-50">
+                        <i class="fas fa-user w-4"></i>
+                        Profile
+                    </a>
+                    <a href="settings.html" class="flex items-center gap-2 p-2 text-sm rounded hover:bg-gray-50">
+                        <i class="fas fa-cog w-4"></i>
+                        Settings
+                    </a>
+                    <button onclick="logout()"
+                        class="flex items-center gap-2 p-2 text-sm rounded hover:bg-gray-50 w-full text-left">
+                        <i class="fas fa-sign-out-alt w-4"></i>
+                        Sign out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64">
+        <!-- Top Header -->
+        <header class="bg-white shadow-sm border-b px-6 py-4">
+            <div class="flex items-center justify-between">
+                <button class="lg:hidden" onclick="toggleSidebar()">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-semibold">Analytics</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- Date Range Selector -->
+                    <select id="dateRange"
+                        class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        onchange="updateAnalytics()">
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="90">Last 3 months</option>
+                        <option value="365">Last year</option>
+                    </select>
+                    <button class="p-2 hover:bg-gray-100 rounded-lg" onclick="refreshAnalytics()">
+                        <i class="fas fa-sync-alt text-gray-600"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Analytics Content -->
+        <main class="p-6">
+            <div class="max-w-7xl mx-auto space-y-6">
+
+                <!-- Overview Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Total Spent -->
+                    <div class="stat-card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Total Spent</p>
+                                <p class="text-2xl font-bold text-gray-900" id="totalSpent">₦0.00</p>
+                                <p class="text-sm text-red-600" id="spentChange">
+                                    <i class="fas fa-arrow-down mr-1"></i>
+                                    <span>0%</span> from last period
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-arrow-up text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Transactions -->
+                    <div class="stat-card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Transactions</p>
+                                <p class="text-2xl font-bold text-gray-900" id="totalTransactions">0</p>
+                                <p class="text-sm text-green-600" id="transactionChange">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    <span>0%</span> from last period
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exchange-alt text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Average Transaction -->
+                    <div class="stat-card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Avg. Transaction</p>
+                                <p class="text-2xl font-bold text-gray-900" id="avgTransaction">₦0.00</p>
+                                <p class="text-sm text-blue-600" id="avgChange">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    <span>0%</span> from last period
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-calculator text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Favorite Merchant -->
+                    <div class="stat-card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">Top Merchant</p>
+                                <p class="text-lg font-bold text-gray-900 truncate" id="topMerchant">-</p>
+                                <p class="text-sm text-orange-600" id="merchantCount">
+                                    <i class="fas fa-store mr-1"></i>
+                                    <span>0</span> transactions
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-crown text-orange-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Spending Trend Chart -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Spending Trend</h3>
+                            <div class="flex gap-2">
+                                <button onclick="changeChartType('line')"
+                                    class="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded-lg">Line</button>
+                                <button onclick="changeChartType('bar')"
+                                    class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg">Bar</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="spendingChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Spending by Category</h3>
+                            <button onclick="exportChart('category')"
+                                class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                <i class="fas fa-download mr-1"></i>Export
+                            </button>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Analytics -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Monthly Comparison -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">Monthly Comparison</h3>
+                        <div class="chart-container">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Merchants -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Top Merchants</h3>
+                            <span class="text-sm text-gray-500" id="merchantPeriod">Last 30 days</span>
+                        </div>
+                        <div id="topMerchantsList" class="space-y-3">
+                            <!-- Merchants will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Spending Insights -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">Insights</h3>
+                        <div id="spendingInsights" class="space-y-4">
+                            <!-- Insights will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaction Patterns -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold">Transaction Patterns</h3>
+                        <div class="flex gap-2">
+                            <button onclick="showPattern('hourly')"
+                                class="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded-lg">Hourly</button>
+                            <button onclick="showPattern('daily')"
+                                class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg">Daily</button>
+                            <button onclick="showPattern('weekly')"
+                                class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg">Weekly</button>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="patternsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Goals and Budgets -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Spending Goals -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Monthly Budget</h3>
+                            <button onclick="setBudget()"
+                                class="px-3 py-1 text-sm bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                                Set Budget
+                            </button>
+                        </div>
+                        <div id="budgetProgress" class="space-y-4">
+                            <!-- Budget progress will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Savings Tracker -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Savings Tracker</h3>
+                            <span class="text-sm text-gray-500">vs. last month</span>
+                        </div>
+                        <div id="savingsTracker" class="space-y-4">
+                            <!-- Savings data will be shown here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Options -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">Export Analytics</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="exportAnalytics('pdf')"
+                            class="flex items-center justify-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fas fa-file-pdf text-red-600"></i>
+                            <span>Export as PDF</span>
+                        </button>
+                        <button onclick="exportAnalytics('excel')"
+                            class="flex items-center justify-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fas fa-file-excel text-green-600"></i>
+                            <span>Export as Excel</span>
+                        </button>
+                        <button onclick="exportAnalytics('csv')"
+                            class="flex items-center justify-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fas fa-file-csv text-blue-600"></i>
+                            <span>Export as CSV</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Budget Modal -->
+    <div id="budgetModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Set Monthly Budget</h3>
+                    <button onclick="closeBudgetModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+
+                <form id="budgetForm" class="space-y-4">
+                    <div>
+                        <label for="budgetAmount" class="block text-sm font-medium text-gray-700 mb-1">Monthly Budget
+                            Amount</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2 text-gray-500">₦</span>
+                            <input type="number" id="budgetAmount" step="0.01" required
+                                class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="budgetCategory" class="block text-sm font-medium text-gray-700 mb-1">Category
+                            (Optional)</label>
+                        <select id="budgetCategory"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                            <option value="">All Categories</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transportation</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button type="button" onclick="closeBudgetModal()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                            Set Budget
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/individual-analytics.js"></script>
+</body>
+
+</html>

@@ -363,7 +363,7 @@
                             <li><a href="about.html">About Us</a></li>
                             <!-- <li><a href="careers.html">Careers</a></li> -->
                             <li><a href="contact.html">Contact Us</a></li>
-                            
+
                         </ul>
                     </div>
                     <div class="footer-column">
@@ -371,7 +371,7 @@
                         <ul>
                             <li><a href="business.html">For Business</a></li>
                             <li><a href="#individual">For Individuals</a></li>
-                           
+
                         </ul>
                     </div>
                     <div class="footer-column">
@@ -444,43 +444,39 @@
             document.getElementById('navLinks').style.right = '-200px';
         }
 
-        // Testimonial slider
-        let currentSlide = 0;
-        const dots = document.querySelectorAll('.dot');
-        const testimonials = document.querySelectorAll('.testimonial');
+        // Testimonial slider - run after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            let currentSlide = 0;
+            const dots = document.querySelectorAll('.dot');
+            const testimonials = document.querySelectorAll('.testimonial');
 
-        function showSlide(n) {
-            // Hide all testimonials
-            testimonials.forEach(testimonial => {
-                testimonial.style.display = 'none';
-            });
+            function showSlide(n) {
+                testimonials.forEach(testimonial => {
+                    testimonial.style.display = 'none';
+                });
+                dots.forEach(dot => {
+                    dot.classList.remove('active');
+                });
+                testimonials[n].style.display = 'block';
+                dots[n].classList.add('active');
+            }
 
-            // Remove active class from all dots
-            dots.forEach(dot => {
-                dot.classList.remove('active');
-            });
-
-            // Show the current testimonial and activate the dot
-            testimonials[n].style.display = 'block';
-            dots[n].classList.add('active');
-        }
-
-        // Initialize the slider
-        showSlide(currentSlide);
-
-        // Add click event to dots
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                currentSlide = index;
+            if (testimonials.length && dots.length) {
                 showSlide(currentSlide);
-            });
-        });
 
-        // Auto slide
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % testimonials.length;
-            showSlide(currentSlide);
-        }, 5000);
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        currentSlide = index;
+                        showSlide(currentSlide);
+                    });
+                });
+
+                setInterval(() => {
+                    currentSlide = (currentSlide + 1) % testimonials.length;
+                    showSlide(currentSlide);
+                }, 5000);
+            }
+        });
     </script>
 
     <!-- Service Worker Registration -->

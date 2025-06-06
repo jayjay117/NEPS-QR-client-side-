@@ -4,269 +4,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NEPS-QR - Sign up for an individual account">
-    <meta name="theme-color" content="#FF6B00">
-    <title>NEPS-QR | Individual Sign Up</title>
-
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
-
-    <!-- Font Awesome Icons -->
+    <title>Sign Up - NEPS-QR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+        .step {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/individual.css">
-    <link rel="stylesheet" href="css/auth.css">
+        .step.active {
+            background-color: #f97316;
+            color: white;
+        }
+
+        .step.completed {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .step.inactive {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background-color: #e5e7eb;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-line.completed {
+            background-color: #10b981;
+        }
+
+        .step-line.active {
+            background-color: #f97316;
+        }
+
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak {
+            background-color: #ef4444;
+            width: 25%;
+        }
+
+        .strength-fair {
+            background-color: #f59e0b;
+            width: 50%;
+        }
+
+        .strength-good {
+            background-color: #3b82f6;
+            width: 75%;
+        }
+
+        .strength-strong {
+            background-color: #10b981;
+            width: 100%;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+    </style>
 </head>
 
-<body>
-    <!-- Header & Navigation -->
-    <header>
-        <div class="container">
-            <nav>
-                <a href="individual.html" class="back-home">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span>Back to Individual</span>
-                </a>
-                <div class="logo">
-                    <img src="images/nqr-logo.png" alt="NEPS-QR Logo">
-                    <span>NEPS-QR</span>
+<body class="bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="w-full max-w-md space-y-6">
+            <!-- Logo -->
+            <div class="text-center">
+                <div class="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-qrcode text-white text-2xl"></i>
                 </div>
-            </nav>
-        </div>
-    </header>
+                <h1 class="text-2xl font-bold">Create Account</h1>
+                <p class="text-gray-600">Join NEPS-QR for seamless payments</p>
+            </div>
 
-    <!-- Signup Form Section -->
-    <section class="auth-section">
-        <div class="container">
-            <div class="auth-container">
-                <div class="auth-header">
-                    <h1>Individual Sign Up</h1>
-                    <p>Create your NEPS-QR individual account to start making payments</p>
+            <!-- Signup Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step-line" id="line1"></div>
+                    <div class="step inactive" id="step2">2</div>
+                    <div class="step-line" id="line2"></div>
+                    <div class="step inactive" id="step3">3</div>
+                    <div class="step-line" id="line3"></div>
+                    <div class="step inactive" id="step4">4</div>
                 </div>
 
-                <form id="individualSignupForm" class="auth-form">
-                    <div class="form-progress">
-                        <div class="progress-bar">
-                            <div class="progress" id="formProgress"></div>
-                        </div>
-                        <div class="progress-steps">
-                            <div class="step active" data-step="1">1</div>
-                            <div class="step" data-step="2">2</div>
-                            <div class="step" data-step="3">3</div>
-                        </div>
-                    </div>
-
-                    <!-- Step 1: Personal Information -->
-                    <div class="form-step" id="step1">
-                        <h2>Personal Information</h2>
-
-                        <div class="form-group">
-                            <label for="fullName">Full Name (as on BVN) <span class="required">*</span></label>
-                            <input type="text" id="fullName" name="fullName" required>
-                            <div class="error-message" id="fullNameError"></div>
+                <!-- Step 1: Personal Information -->
+                <div id="personalInfoStep" class="form-step active">
+                    <h2 class="text-lg font-semibold mb-4">Personal Information</h2>
+                    <form id="personalInfoForm" class="space-y-4">
+                        <div>
+                            <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="fullName" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                placeholder="Enter your full name">
+                            <div id="fullNameError" class="text-red-500 text-xs mt-1 hidden"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="bvn">BVN <span class="required">*</span></label>
-                            <input type="text" id="bvn" name="bvn" maxlength="11"
-                                placeholder="Your 11-digit Bank Verification Number" required>
-                            <div class="error-message" id="bvnError"></div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address <span
+                                    class="text-red-500">*</span></label>
+                            <input type="email" id="email" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                placeholder="Enter your email">
+                            <div id="emailError" class="text-red-500 text-xs mt-1 hidden"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="phoneNumber">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., 08012345678"
-                                required>
-                            <div class="error-message" id="phoneNumberError"></div>
+                        <div>
+                            <label for="phoneNumber" class="block text-sm font-medium text-gray-700 mb-1">Phone Number
+                                <span class="text-red-500">*</span></label>
+                            <input type="tel" id="phoneNumber" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                placeholder="Enter your phone number">
+                            <div id="phoneError" class="text-red-500 text-xs mt-1 hidden"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="email">Email Address <span class="required">*</span></label>
-                            <input type="email" id="email" name="email" required>
-                            <div class="error-message" id="emailError"></div>
+                        <div>
+                            <label for="dateOfBirth" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth
+                                <span class="text-red-500">*</span></label>
+                            <input type="date" id="dateOfBirth" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                            <div id="dobError" class="text-red-500 text-xs mt-1 hidden"></div>
                         </div>
 
-                        <div class="form-buttons">
-                            <button type="button" class="btn btn-primary next-btn" data-next="2">Next</button>
-                        </div>
-                    </div>
+                        <button type="submit"
+                            class="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 font-medium">
+                            Continue
+                        </button>
+                    </form>
+                </div>
 
-                    <!-- Step 2: Address & Location -->
-                    <div class="form-step" id="step2" style="display: none;">
-                        <h2>Address & Location</h2>
-
-                        <div class="form-group">
-                            <label for="address">Address <span class="required">*</span></label>
-                            <textarea id="address" name="address" rows="3" required></textarea>
-                            <div class="error-message" id="addressError"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="state">State <span class="required">*</span></label>
-                            <select id="state" name="state" required>
-                                <option value="">Select a state</option>
-                                <option value="Abia">Abia</option>
-                                <option value="Adamawa">Adamawa</option>
-                                <option value="Akwa Ibom">Akwa Ibom</option>
-                                <option value="Anambra">Anambra</option>
-                                <option value="Bauchi">Bauchi</option>
-                                <option value="Bayelsa">Bayelsa</option>
-                                <option value="Benue">Benue</option>
-                                <option value="Borno">Borno</option>
-                                <option value="Cross River">Cross River</option>
-                                <option value="Delta">Delta</option>
-                                <option value="Ebonyi">Ebonyi</option>
-                                <option value="Edo">Edo</option>
-                                <option value="Ekiti">Ekiti</option>
-                                <option value="Enugu">Enugu</option>
-                                <option value="FCT">Federal Capital Territory</option>
-                                <option value="Gombe">Gombe</option>
-                                <option value="Imo">Imo</option>
-                                <option value="Jigawa">Jigawa</option>
-                                <option value="Kaduna">Kaduna</option>
-                                <option value="Kano">Kano</option>
-                                <option value="Katsina">Katsina</option>
-                                <option value="Kebbi">Kebbi</option>
-                                <option value="Kogi">Kogi</option>
-                                <option value="Kwara">Kwara</option>
-                                <option value="Lagos">Lagos</option>
-                                <option value="Nasarawa">Nasarawa</option>
-                                <option value="Niger">Niger</option>
-                                <option value="Ogun">Ogun</option>
-                                <option value="Ondo">Ondo</option>
-                                <option value="Osun">Osun</option>
-                                <option value="Oyo">Oyo</option>
-                                <option value="Plateau">Plateau</option>
-                                <option value="Rivers">Rivers</option>
-                                <option value="Sokoto">Sokoto</option>
-                                <option value="Taraba">Taraba</option>
-                                <option value="Yobe">Yobe</option>
-                                <option value="Zamfara">Zamfara</option>
-                            </select>
-                            <div class="error-message" id="stateError"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="city">City <span class="required">*</span></label>
-                            <input type="text" id="city" name="city" required>
-                            <div class="error-message" id="cityError"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="button" id="detectLocationBtn" class="btn btn-secondary">
-                                <i class="fa-solid fa-location-dot"></i> Detect My Location
-                            </button>
-                            <div id="locationStatus" class="mt-2 text-sm"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="referralSource">How did you hear about us? <span
-                                    class="required">*</span></label>
-                            <select id="referralSource" name="referralSource" required>
-                                <option value="">Select an option</option>
-                                <option value="Social Media">Social Media</option>
-                                <option value="Friend or Family">Friend or Family</option>
-                                <option value="Search Engine">Search Engine</option>
-                                <option value="TV or Radio">TV or Radio</option>
-                                <option value="Billboard">Billboard</option>
-                                <option value="Business Establishment">Business Establishment</option>
-                                <option value="Other">Other</option>
-                            </select>
-                            <div class="error-message" id="referralSourceError"></div>
-                        </div>
-
-                        <div class="form-buttons">
-                            <button type="button" class="btn btn-secondary prev-btn" data-prev="1">Previous</button>
-                            <button type="button" class="btn btn-primary next-btn" data-next="3">Next</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Security -->
-                    <div class="form-step" id="step3" style="display: none;">
-                        <h2>Security</h2>
-
-                        <div class="form-group">
-                            <label for="password">Password <span class="required">*</span></label>
-                            <div class="password-input">
-                                <input type="password" id="password" name="password" required>
-                                <i class="fa-solid fa-eye toggle-password" data-target="password"></i>
+                <!-- Step 2: Security Setup -->
+                <div id="securityStep" class="form-step">
+                    <h2 class="text-lg font-semibold mb-4">Security Setup</h2>
+                    <form id="securityForm" class="space-y-4">
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password <span
+                                    class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input type="password" id="password" required
+                                    class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                    placeholder="Create a strong password">
+                                <button type="button" onclick="togglePasswordVisibility('password')"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <i id="passwordToggleIcon" class="fas fa-eye-slash"></i>
+                                </button>
                             </div>
-                            <div class="password-strength">
-                                <div class="strength-bar">
-                                    <div class="strength-indicator" id="passwordStrength"></div>
+
+                            <!-- Password Strength Indicator -->
+                            <div class="mt-2">
+                                <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                    <span>Password Strength</span>
+                                    <span id="strengthText">Weak</span>
                                 </div>
-                                <span class="strength-text" id="strengthText">Password strength</span>
+                                <div class="w-full bg-gray-200 rounded-full h-1">
+                                    <div id="strengthBar" class="password-strength strength-weak"></div>
+                                </div>
                             </div>
-                            <div class="error-message" id="passwordError"></div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
-                            <div class="password-input">
-                                <input type="password" id="confirmPassword" name="confirmPassword" required>
-                                <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+                            <!-- Password Requirements -->
+                            <div class="mt-2 space-y-1 text-xs">
+                                <div id="req-length" class="flex items-center gap-2 text-gray-500">
+                                    <i class="fas fa-times text-red-500"></i>
+                                    <span>At least 8 characters</span>
+                                </div>
+                                <div id="req-uppercase" class="flex items-center gap-2 text-gray-500">
+                                    <i class="fas fa-times text-red-500"></i>
+                                    <span>One uppercase letter</span>
+                                </div>
+                                <div id="req-lowercase" class="flex items-center gap-2 text-gray-500">
+                                    <i class="fas fa-times text-red-500"></i>
+                                    <span>One lowercase letter</span>
+                                </div>
+                                <div id="req-number" class="flex items-center gap-2 text-gray-500">
+                                    <i class="fas fa-times text-red-500"></i>
+                                    <span>One number</span>
+                                </div>
+                                <div id="req-special" class="flex items-center gap-2 text-gray-500">
+                                    <i class="fas fa-times text-red-500"></i>
+                                    <span>One special character</span>
+                                </div>
                             </div>
-                            <div class="error-message" id="confirmPasswordError"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="transactionPin">4-Digit Transaction PIN <span class="required">*</span></label>
-                            <input type="password" id="transactionPin" name="transactionPin" maxlength="4"
-                                placeholder="Create a 4-digit PIN for transactions" required>
-                            <div class="error-message" id="transactionPinError"></div>
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm
+                                Password <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input type="password" id="confirmPassword" required
+                                    class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                    placeholder="Confirm your password">
+                                <button type="button" onclick="togglePasswordVisibility('confirmPassword')"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <i id="confirmPasswordToggleIcon" class="fas fa-eye-slash"></i>
+                                </button>
+                            </div>
+                            <div id="confirmPasswordError" class="text-red-500 text-xs mt-1 hidden"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="confirmPin">Confirm Transaction PIN <span class="required">*</span></label>
-                            <input type="password" id="confirmPin" name="confirmPin" maxlength="4" required>
-                            <div class="error-message" id="confirmPinError"></div>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="goToPreviousStep()"
+                                class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                                Back
+                            </button>
+                            <button type="submit"
+                                class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                                Continue
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Step 3: PIN Setup -->
+                <div id="pinStep" class="form-step">
+                    <h2 class="text-lg font-semibold mb-4">Transaction PIN</h2>
+                    <p class="text-sm text-gray-600 mb-4">Create a 4-digit PIN for secure transactions</p>
+                    <form id="pinForm" class="space-y-4">
+                        <div>
+                            <label for="transactionPin" class="block text-sm font-medium text-gray-700 mb-1">4-Digit PIN
+                                <span class="text-red-500">*</span></label>
+                            <input type="password" id="transactionPin" maxlength="4" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg tracking-widest"
+                                placeholder="••••">
+                            <div id="pinError" class="text-red-500 text-xs mt-1 hidden"></div>
                         </div>
 
-                        <div class="form-group checkbox-group">
-                            <input type="checkbox" id="termsAgreement" name="termsAgreement" required>
-                            <label for="termsAgreement">I agree to the <a href="terms.html" target="_blank">Terms of
-                                    Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></label>
-                            <div class="error-message" id="termsAgreementError"></div>
+                        <div>
+                            <label for="confirmPin" class="block text-sm font-medium text-gray-700 mb-1">Confirm PIN
+                                <span class="text-red-500">*</span></label>
+                            <input type="password" id="confirmPin" maxlength="4" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg tracking-widest"
+                                placeholder="••••">
+                            <div id="confirmPinError" class="text-red-500 text-xs mt-1 hidden"></div>
                         </div>
 
-                        <div class="form-buttons">
-                            <button type="button" class="btn btn-secondary prev-btn" data-prev="2">Previous</button>
-                            <button type="submit" class="btn btn-primary">Create Account</button>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                                <div class="text-sm text-blue-700">
+                                    <p class="font-medium">Important:</p>
+                                    <p>Your PIN will be required for all transactions. Keep it secure and don't share it
+                                        with anyone.</p>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="flex gap-2">
+                            <button type="button" onclick="goToPreviousStep()"
+                                class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                                Back
+                            </button>
+                            <button type="submit"
+                                class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                                Continue
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Step 4: Verification -->
+                <div id="verificationStep" class="form-step">
+                    <h2 class="text-lg font-semibold mb-4">Account Verification</h2>
+                    <div class="text-center space-y-4">
+                        <div class="w-16 h-16 mx-auto bg-orange-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-envelope text-orange-500 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium">Verify Your Email</h3>
+                            <p class="text-sm text-gray-600 mt-1">We've sent a verification code to:</p>
+                            <p class="font-medium text-orange-600" id="verificationEmail"></p>
+                        </div>
+
+                        <form id="verificationForm" class="space-y-4">
+                            <div>
+                                <label for="verificationCode"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Verification Code</label>
+                                <input type="text" id="verificationCode" maxlength="6" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg tracking-widest"
+                                    placeholder="000000">
+                                <div id="verificationError" class="text-red-500 text-xs mt-1 hidden"></div>
+                            </div>
+
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600">
+                                    Didn't receive the code?
+                                    <button type="button" onclick="resendVerificationCode()" id="resendBtn"
+                                        class="text-orange-500 hover:text-orange-600 font-medium">
+                                        Resend
+                                    </button>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Code expires in <span id="countdown">5:00</span>
+                                </p>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button type="button" onclick="goToPreviousStep()"
+                                    class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                                    Back
+                                </button>
+                                <button type="submit" id="verifyBtn"
+                                    class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                                    Verify & Complete
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
 
-                <div class="auth-footer">
-                    <p>Already have an account? <a href="individual-login.html">Login</a></p>
+                <!-- Success Step -->
+                <div id="successStep" class="form-step text-center">
+                    <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-green-600 mb-2">Account Created Successfully!</h2>
+                    <p class="text-gray-600 mb-6">Welcome to NEPS-QR! Your account is ready to use.</p>
+
+                    <div class="space-y-3">
+                        <button onclick="window.location.href='individual-login.html'"
+                            class="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 font-medium">
+                            Sign In to Your Account
+                        </button>
+                        <button onclick="window.location.href='individual-dashboard.html'"
+                            class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50 font-medium">
+                            Go to Dashboard
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Already have account link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Already have an account?
+                        <a href="individual-login.html" class="text-orange-500 hover:text-orange-600 font-medium">Sign in</a>
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
-    <footer class="auth-footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2025 NEPS-QR. All rights reserved.</p>
-                <div class="footer-bottom-links">
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Use</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="js/individual-auth.js"></script>
+    <script src="js/individual-signup.js"></script>
 </body>
 
 </html>

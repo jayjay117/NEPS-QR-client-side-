@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - NEPS-QR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar-overlay {
+            display: none;
+        }
+
+        .sidebar-open .sidebar-overlay {
+            display: block;
+        }
+
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-open .sidebar {
+            transform: translateX(0);
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+
+        .balance-hidden {
+            filter: blur(4px);
+        }
+
+        .funding-option {
+            transition: all 0.3s ease;
+        }
+
+        .funding-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-50 lg:transform-none">
+        <div class="flex flex-col h-full">
+            <!-- Sidebar Header -->
+            <div class="flex items-center gap-3 p-6 border-b">
+                <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-qrcode text-white text-lg"></i>
+                </div>
+                <span class="font-bold text-xl">NEPS-QR</span>
+                <button class="ml-auto lg:hidden" onclick="toggleSidebar()">
+                    <i class="fas fa-times text-gray-500"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="individual-dashboard.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-home"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-pay.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-qrcode"></i>
+                            Pay a Business
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-wallet.html"
+                            class="flex items-center gap-3 p-3 rounded-lg bg-orange-50 text-orange-700 font-medium">
+                            <i class="fas fa-wallet"></i>
+                            Wallet
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-transactions.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-history"></i>
+                            Transactions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-cards.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-credit-card"></i>
+                            Cards
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-analytics.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-chart-pie"></i>
+                            Analytics
+                        </a>
+                    </li>
+                    <li>
+                        <a href="individual-settings.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="border-t p-4">
+                <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    onclick="toggleUserMenu()">
+                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                        <span class="text-orange-700 font-medium text-sm" id="userInitials">U</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm truncate" id="userName">User</div>
+                        <div class="text-xs text-gray-500 truncate" id="userEmail">user@example.com</div>
+                    </div>
+                    <i class="fas fa-chevron-up text-gray-400"></i>
+                </div>
+
+                <!-- User Menu Dropdown -->
+                <div id="userMenu" class="hidden mt-2 space-y-1">
+                    <a href="individual-profile.html" class="flex items-center gap-2 p-2 text-sm rounded hover:bg-gray-50">
+                        <i class="fas fa-user w-4"></i>
+                        Profile
+                    </a>
+                    <a href="individual-settings.html" class="flex items-center gap-2 p-2 text-sm rounded hover:bg-gray-50">
+                        <i class="fas fa-cog w-4"></i>
+                        Settings
+                    </a>
+                    <button onclick="handleLogout()"
+                        class="flex items-center gap-2 p-2 text-sm rounded hover:bg-gray-50 w-full text-left">
+                        <i class="fas fa-sign-out-alt w-4"></i>
+                        Sign out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64">
+        <!-- Top Header -->
+        <header class="bg-white shadow-sm border-b px-6 py-4">
+            <div class="flex items-center justify-between">
+                <button class="lg:hidden" onclick="toggleSidebar()">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+                <div class="flex-1"></div>
+                <button class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-bell text-gray-600"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Wallet Content -->
+        <main class="p-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- Wallet Balance Card -->
+                <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 text-white">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <h2 class="text-lg font-semibold">Wallet Balance</h2>
+                                <button onclick="toggleBalanceVisibility()"
+                                    class="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors">
+                                    <i id="balanceToggleIcon" class="fas fa-eye-slash"></i>
+                                </button>
+                            </div>
+                            <div class="text-3xl font-bold mb-4">
+                                <span id="walletBalance">₦0.00</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="showFundWalletOptions()"
+                                    class="bg-white text-orange-600 px-4 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Add Money
+                                </button>
+                                <button onclick="window.location.href='individual-pay.html'"
+                                    class="bg-orange-600 bg-opacity-30 text-white px-4 py-2 rounded-lg hover:bg-opacity-40 transition-colors border border-white border-opacity-30">
+                                    <i class="fas fa-qrcode mr-2"></i>
+                                    Pay
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white bg-opacity-10 p-4 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-info text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium">Wallet ID</h3>
+                                    <div class="flex items-center gap-2">
+                                        <span id="walletId">NQRW-12345678</span>
+                                        <button onclick="copyToClipboard('walletId')"
+                                            class="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors">
+                                            <i class="fas fa-copy text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Funding Options -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h2 class="text-lg font-semibold">Fund Your Wallet</h2>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Bank Transfer Option -->
+                            <div class="funding-option border rounded-lg p-4 cursor-pointer"
+                                onclick="showBankTransferDetails()">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-university text-blue-600 text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium">Bank Transfer</h3>
+                                        <p class="text-sm text-gray-600">Transfer from any bank</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Payment Option -->
+                            <div class="funding-option border rounded-lg p-4 cursor-pointer"
+                                onclick="window.location.href='individual-cards.html'">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-credit-card text-green-600 text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium">Card Payment</h3>
+                                        <p class="text-sm text-gray-600">Fund with debit/credit card</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b flex items-center justify-between">
+                        <h2 class="text-lg font-semibold">Recent Transactions</h2>
+                        <a href="individual-transactions.html" class="text-sm text-orange-600 hover:text-orange-700">View All</a>
+                    </div>
+
+                    <div id="recentTransactions" class="divide-y">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Virtual Account Info -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-4 border-b">
+                        <h2 class="text-lg font-semibold">Your Virtual Account</h2>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <div class="mb-4">
+                                        <span class="text-sm text-gray-600">Account Number</span>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xl font-bold" id="virtualAccountNumber">8012345678</span>
+                                            <button onclick="copyToClipboard('virtualAccountNumber')"
+                                                class="p-1 bg-blue-100 rounded hover:bg-blue-200 transition-colors">
+                                                <i class="fas fa-copy text-blue-600 text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <span class="text-sm text-gray-600">Bank Name</span>
+                                        <div class="font-medium">NEPS-QR Bank</div>
+                                    </div>
+
+                                    <div>
+                                        <span class="text-sm text-gray-600">Account Name</span>
+                                        <div class="font-medium" id="virtualAccountName">John Doe</div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-lg border border-blue-100">
+                                    <h3 class="font-medium text-blue-800 mb-2">How to Fund via Bank Transfer</h3>
+                                    <ol class="text-sm text-gray-700 space-y-2 list-decimal pl-4">
+                                        <li>Log in to your bank's mobile app or internet banking</li>
+                                        <li>Select "Transfer to other banks"</li>
+                                        <li>Enter the account number shown above</li>
+                                        <li>Select "NEPS-QR Bank" as the destination bank</li>
+                                        <li>Enter the amount you want to fund</li>
+                                        <li>Complete the transfer</li>
+                                        <li>Your wallet will be credited instantly</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bank Transfer Modal -->
+    <div id="bankTransferModal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end md:items-center justify-center">
+        <div class="slide-up bg-white rounded-t-2xl md:rounded-lg w-full max-w-md">
+            <div class="p-4 border-b flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Bank Transfer Details</h3>
+                <button onclick="closeBankTransferModal()" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-times text-gray-500"></i>
+                </button>
+            </div>
+
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="modalAccountNumber" value="8012345678" readonly
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                            <button onclick="copyToClipboard('modalAccountNumber')"
+                                class="p-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-copy text-gray-600"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
+                        <input type="text" value="NEPS Bank" readonly
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Account Name</label>
+                        <input type="text" id="modalAccountName" value="John Doe" readonly
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="flex items-start gap-2">
+                            <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+                            <div class="text-sm text-blue-700">
+                                <p class="font-medium mb-1">Important:</p>
+                                <p>Your wallet will be credited instantly once the transfer is complete. There are no
+                                    fees for funding via bank transfer.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="closeBankTransferModal()"
+                        class="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 font-medium transition-colors">
+                        Done
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fund Wallet Options Modal -->
+    <div id="fundWalletOptionsModal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end md:items-center justify-center">
+        <div class="slide-up bg-white rounded-t-2xl md:rounded-lg w-full max-w-md">
+            <div class="p-4 border-b flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Fund Your Wallet</h3>
+                <button onclick="closeFundWalletOptions()" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-times text-gray-500"></i>
+                </button>
+            </div>
+
+            <div class="p-6">
+                <div class="space-y-4">
+                    <button onclick="showBankTransferDetails(); closeFundWalletOptions();"
+                        class="w-full flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors text-left">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-university text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Bank Transfer</h4>
+                            <p class="text-sm text-gray-600">Transfer from any bank</p>
+                        </div>
+                    </button>
+
+                    <button onclick="window.location.href='indivdual-cards.html'"
+                        class="w-full flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors text-left">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-credit-card text-green-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Card Payment</h4>
+                            <p class="text-sm text-gray-600">Fund with debit/credit card</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/individual-wallet.js"></script>
+</body>
+
+</html>
