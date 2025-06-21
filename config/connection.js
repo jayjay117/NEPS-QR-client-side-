@@ -1,21 +1,33 @@
-const sql = require(`mysql`)
-const dotnev = require(`dotenv`);
+const mysql = require('mysql2');
+const dotenv = require('dotenv');
+const { URL } = require('url');
 
-dotnev.config()
+dotenv.config();
 
-const connection = sql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+if (!process.env.DATABASE_URL) {
+  console.error('❌ DATABASE_URL is missing. Check your .env file or environment settings.');
+  process.exit(1); // Stop the app from continuing
+}
+
+const dbUrl = new URL(process.env.DATABASE_URL);
+
+const connection = mysql.createConnection({
+  host: dbUrl.hostname,
+  port: dbUrl.port,
+  user: dbUrl.username,
+  password: dbUrl.password,
+  database: dbUrl.pathname.replace('/', ''),
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
-if(connection.connect((err) => {
+connection.connect((err) => {
   if (err) {
-    console.error('Error connecting to the database:', err);
+    console.error('❌ Error connecting to DB:', err.message);
     return;
   }
-  console.log('Connected to the database');
-}));
+  console.log('✅ Connected to Railway DB');
+});
 
 module.exports = connection;
