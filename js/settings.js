@@ -69,30 +69,32 @@ class SettingsManager {
     }
 
     switchTab(event) {
-        const target = event.target.dataset.tabTarget
+        // Always use currentTarget to get the button, not the child element
+        const tabButton = event.currentTarget;
+        const target = tabButton.dataset.tabTarget;
 
         // Hide all tab contents
-        const tabContents = document.querySelectorAll("[data-tab-content]")
+        const tabContents = document.querySelectorAll("[data-tab-content]");
         tabContents.forEach((content) => {
-            content.classList.add("hidden")
-        })
+            content.classList.add("hidden");
+        });
 
         // Remove active class from all buttons
-        const tabButtons = document.querySelectorAll("[data-tab-target]")
+        const tabButtons = document.querySelectorAll("[data-tab-target]");
         tabButtons.forEach((btn) => {
-            btn.classList.remove("bg-primary-100", "text-primary-700", "border-b-2", "border-primary-600")
-            btn.classList.add("text-gray-600", "hover:bg-gray-100", "border-b", "border-gray-200")
-        })
+            btn.classList.remove("bg-primary-100", "text-primary-700", "border-b-2", "border-primary-600");
+            btn.classList.add("text-gray-600", "hover:bg-gray-100", "border-b", "border-gray-200");
+        });
 
         // Show target tab content
-        const targetContent = document.querySelector(`[data-tab-content="${target}"]`)
+        const targetContent = document.querySelector(`[data-tab-content="${target}"]`);
         if (targetContent) {
-            targetContent.classList.remove("hidden")
+            targetContent.classList.remove("hidden");
         }
 
         // Add active class to clicked button
-        event.target.classList.remove("text-gray-600", "hover:bg-gray-100", "border-b", "border-gray-200")
-        event.target.classList.add("bg-primary-100", "text-primary-700", "border-b-2", "border-primary-600")
+        tabButton.classList.remove("text-gray-600", "hover:bg-gray-100", "border-b", "border-gray-200");
+        tabButton.classList.add("bg-primary-100", "text-primary-700", "border-b-2", "border-primary-600");
     }
 
     setupFormSubmissions() {
