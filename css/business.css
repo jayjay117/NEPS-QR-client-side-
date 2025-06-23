@@ -19,9 +19,10 @@
 }
 
 .btn-secondary {
-    background-color: transparent;
+    background-color: #ffcc00;
     color: #ffcc00;
     /* Match the highlight color */
+    color: white;
     border: 2px solid #ffcc00;
     transition: all 0.3s ease;
 }
@@ -51,7 +52,7 @@
 .business-hero-text p {
     font-size: 1.1rem;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .business-hero-text .highlight {
