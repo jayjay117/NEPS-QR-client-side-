@@ -1,7 +1,7 @@
 // Dashboard JavaScript
 document.addEventListener("DOMContentLoaded", () => {
     // Check authentication
-    checkAuthentication()
+    // checkAuthentication() 
 
     // Initialize dashboard
     initializeDashboard()
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load activity
     loadActivity()
 
-    // Setup session management
+    // Setup session management 
     setupSessionManagement()
 })
 
@@ -68,30 +68,44 @@ function initializeDashboard() {
 
 // Load user data
 function loadUserData() {
-    const currentUser = localStorage.getItem("nqr_current_individual")
-    const individuals = JSON.parse(localStorage.getItem("nqr_individuals") || "[]")
-    const user = individuals.find((i) => i.email === currentUser)
+    // const currentUser = localStorage.getItem("")
+    // const individuals = JSON.parse(localStorage.getItem("nqr_individuals") || "[]")
+    // const user = individuals.find((i) => i.email === currentUser)
 
-    if (user) {
-        // Update user display
-        const firstName = user.fullName ? user.fullName.split(" ")[0] : "User"
-        document.getElementById("welcomeName").textContent = firstName
-        document.getElementById("userName").textContent = user.fullName || "User"
-        document.getElementById("userEmail").textContent = user.email || "user@example.com"
+    // if (user) {
+    //     // Update user display
+    //     const firstName = user.fullName ? user.fullName.split(" ")[0] : "User"
+    //     document.getElementById("welcomeName").textContent = firstName
+    //     document.getElementById("userName").textContent = user.fullName || "User"
+    //     document.getElementById("userEmail").textContent = user.email || "user@example.com"
 
-        // Update user initials
-        const initials = user.fullName
-            ? user.fullName
-                .split(" ")
-                .map((name) => name[0])
-                .join("")
-                .toUpperCase()
-                .slice(0, 2)
-            : "U"
-        document.getElementById("userInitials").textContent = initials
-    }
+    //     // Update user initials
+    //     const initials = user.fullName
+    //         ? user.fullName
+    //             .split(" ")
+    //             .map((name) => name[0])
+    //             .join("")
+    //             .toUpperCase()
+    //             .slice(0, 2)
+    //         : "U"
+    //     document.getElementById("userInitials").textContent = initials
+    // }
+    const fullname = localStorage.getItem("fullname")
+    const email = localStorage.getItem("email")
+
+    const firstName = document.getElementById("welcomeName")
+    const Mail = document.getElementById("userEmail")
+    const username = document.getElementById("userName")
+
+    firstName.textContent = fullname
+    Mail.textContent = email
+    username.textContent = fullname
+
+    const initials = fullname.trim().charAt(0).toUpperCase()
+    document.getElementById("userInitials").textContent = initials
+    
+
 }
-
 // Balance visibility state
 let balanceVisible = true
 

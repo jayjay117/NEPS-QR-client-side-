@@ -1,6 +1,6 @@
 // Business Login JavaScript
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () =>{
     // Auth Method Selection
     const passwordMethodBtn = document.getElementById("passwordMethodBtn")
     const pinMethodBtn = document.getElementById("pinMethodBtn")
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Password Login Form Submission
     if (passwordLoginFormEl) {
-        passwordLoginFormEl.addEventListener("submit", (e) => {
+        passwordLoginFormEl.addEventListener("submit",async (e) => {
             e.preventDefault()
 
             const email = document.getElementById("loginEmail").value
@@ -70,33 +70,30 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("loginPasswordError").textContent = ""
 
             // Validate inputs
-            let isValid = true
-
-            if (!email.trim()) {
-                document.getElementById("loginEmailError").textContent = "Email address is required."
-                isValid = false
-            } else if (!isValidEmail(email)) {
-                document.getElementById("loginEmailError").textContent = "Please enter a valid email address."
-                isValid = false
-            }
-
-            if (!password) {
-                document.getElementById("loginPasswordError").textContent = "Password is required."
-                isValid = false
-            }
-
-            if (isValid) {
-                // Validate login credentials
-                if (validateLogin(email, password)) {
+            try {
+                const url = 'https://neps-qr-client-side-backend.onrender.com/api/Login'
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                })
+                const data = await response.json()
+                if (response.ok) {
                     // Login successful, redirect to dashboard
                     alert("Login successful! You will be redirected to your dashboard.")
                     // Store logged in user info
                     localStorage.setItem("nqr_current_business", email)
+                    localStorage.setItem("BusinessName", data.businessName)
+                    localStorage.setItem("token", data.token)
                     window.location.href = "business-dashboard.html"
                 } else {
                     // Show error message
-                    document.getElementById("loginEmailError").textContent = "Invalid email or password."
+                    document.getElementById("loginPasswordError").textContent = data.message || "Invalid email or password."
                 }
+            } catch (error) {
+                
             }
         })
     }
@@ -113,37 +110,31 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("pinLoginEmailError").textContent = ""
             document.getElementById("loginPinError").textContent = ""
 
-            // Validate inputs
-            let isValid = true
-
-            if (!email.trim()) {
-                document.getElementById("pinLoginEmailError").textContent = "Email address is required."
-                isValid = false
-            } else if (!isValidEmail(email)) {
-                document.getElementById("pinLoginEmailError").textContent = "Please enter a valid email address."
-                isValid = false
-            }
-
-            if (!pin.trim()) {
-                document.getElementById("loginPinError").textContent = "PIN is required."
-                isValid = false
-            } else if (!isValidPin(pin)) {
-                document.getElementById("loginPinError").textContent = "PIN must be exactly 4 digits."
-                isValid = false
-            }
-
-            if (isValid) {
-                // Validate PIN login
-                if (validatePinLogin(email, pin)) {
-                    // Login successful, redirect to dashboard
-                    alert("Login successful! You will be redirected to your dashboard.")
-                    // Store logged in user info
-                    localStorage.setItem("nqr_current_business", email)
-                    window.location.href = "business-dashboard.html"
-                } else {
-                    // Show error message
-                    document.getElementById("loginPinError").textContent = "Invalid email or PIN."
-                }
+            try {
+                const url = 'https://neps-qr-client-side-backend.onrender.com/api/PINlogin'
+                const response = fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, pin })
+                }).then(async (response) => {
+                    const data = await response.json()
+                    if (response.ok) {
+                        // Login successful, redirect to dashboard
+                        alert("Login successful! You will be redirected to your dashboard.")
+                        // Store logged in user info
+                        localStorage.setItem("nqr_current_business", email)
+                        localStorage.setItem("BusinessName", data.businessName)
+                        localStorage.setItem("token", data.token)
+                        window.location.href = "business-dashboard.html"
+                    } else {
+                        // Show error message
+                        document.getElementById("loginPinError").textContent = data.message || "Invalid email or PIN."
+                    }
+                })
+            } catch (error) {
+                
             }
         })
     }

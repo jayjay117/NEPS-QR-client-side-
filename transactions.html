@@ -63,7 +63,7 @@
             <div class="sidebar-footer">
                 <a href="../business-login.html" class="sidebar-link text-red-500">
                     <i data-lucide="log-out" class="h-5 w-5"></i>
-                    <span>Logout</span>
+                    <span id="logout">Logout</span>
                 </a>
             </div>
         </div>
@@ -133,7 +133,7 @@
                             <button @click="open = !open" class="flex items-center space-x-2">
                                 <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile"
                                     class="h-8 w-8 rounded-full">
-                                <span class="hidden md:inline-block font-medium">Adebayo Stores</span>
+                                <span class="hidden md:inline-block font-medium" id="username">Guest</span>
                                 <i data-lucide="chevron-down" class="h-4 w-4"></i>
                             </button>
 
@@ -552,6 +552,21 @@
     <script>
         // Initialize Lucide Icons
         document.addEventListener("DOMContentLoaded", function () {
+            const username = document.getElementById("username");
+            if (username) {
+                // Set username based on localStorage or default to "Guest"
+                username.textContent = localStorage.getItem("BusinessName") || "Guest";
+            }
+            // logout function
+            const logout = document.getElementById("logout");
+            if (logout) {
+                logout.addEventListener("click", function () {
+                    localStorage.removeItem("BusinessName");
+                    localStorage.removeItem("email");
+                    localStorage.removeItem("token")
+                    window.location.href = "../business-login.html";
+                });
+            }
             lucide.createIcons();
 
             // Initialize date picker

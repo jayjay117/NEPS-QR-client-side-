@@ -292,52 +292,51 @@ function resendVerificationCode() {
 
 // Complete signup process
 function completeSignup() {
-    try {
-        // Get existing individuals
-        const individuals = JSON.parse(localStorage.getItem("nqr_individuals") || "[]")
+  try {
+    // Send formData to backend API
+    fetch("https://neps-qr-client-side-backend.onrender.com/api/UserSignup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message.toLowerCase().includes("successful")) {
+          // Store token (if your backend returns it in the future)
+          // localStorage.setItem("nqr_auth_token", data.token)
 
-        // Create new individual record
-        const newIndividual = {
-            id: Date.now().toString(),
-            fullName: formData.fullName,
-            email: formData.email,
-            phoneNumber: formData.phoneNumber,
-            dateOfBirth: formData.dateOfBirth,
-            password: formData.password,
-            transactionPin: formData.transactionPin,
-            isVerified: true,
-            createdAt: new Date().toISOString(),
-            lastLogin: null,
+          // Store email for auto-login or tracking
+          localStorage.setItem("nqr_current_individual", formData.email)
+
+          // Set session expiry (30 mins)
+          const expiryTime = Date.now() + 30 * 60 * 1000
+          localStorage.setItem("nqr_session_expiry", expiryTime.toString())
+
+          // Initialize wallet balance locally (could come from backend too)
+          localStorage.setItem("nqr_wallet_balance", "0")
+
+          // Show success UI
+          showStep("successStep")
+          updateStepIndicator(5)
+
+          // Clear form data
+          formData = {}
+        } else {
+          showFieldError("verificationError", data.message || "Signup failed.")
         }
-
-        // Add to individuals array
-        individuals.push(newIndividual)
-
-        // Save to localStorage
-        localStorage.setItem("nqr_individuals", JSON.stringify(individuals))
-
-        // Auto-login the user
-        localStorage.setItem("nqr_current_individual", formData.email)
-        localStorage.setItem("nqr_auth_token", "demo_token_" + Date.now())
-
-        // Set session expiry (30 minutes)
-        const expiryTime = Date.now() + 30 * 60 * 1000
-        localStorage.setItem("nqr_session_expiry", expiryTime.toString())
-
-        // Initialize wallet balance
-        localStorage.setItem("nqr_wallet_balance", "0")
-
-        // Show success step
-        showStep("successStep")
-        updateStepIndicator(5)
-
-        // Clear form data
-        formData = {}
-    } catch (error) {
+      })
+      .catch((error) => {
         console.error("Signup error:", error)
-        showFieldError("verificationError", "An error occurred during signup. Please try again.")
-    }
+        showFieldError("verificationError", "Could not connect to the server.")
+      })
+  } catch (error) {
+    console.error("Unexpected error:", error)
+    showFieldError("verificationError", "An unexpected error occurred.")
+  }
 }
+
 
 // Navigation functions
 function goToNextStep() {

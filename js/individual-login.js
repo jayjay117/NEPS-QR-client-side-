@@ -18,16 +18,16 @@ function initializeLogin() {
     })
 
     // Check if user is already logged in
-    const currentUser = localStorage.getItem("nqr_current_individual")
-    if (currentUser) {
-        // Check if session is still valid
-        const sessionExpiry = localStorage.getItem("nqr_session_expiry")
-        if (!sessionExpiry || Date.now() < Number.parseInt(sessionExpiry)) {
-            // Redirect to dashboard
-            window.location.href = "individual-dashboard.html"
-            return
-        }
-    }
+    // const currentUser = localStorage.getItem("nqr_current_individual")
+    // if (currentUser) {
+    //     // Check if session is still valid
+    //     const sessionExpiry = localStorage.getItem("nqr_session_expiry")
+    //     if (!sessionExpiry || Date.now() < Number.parseInt(sessionExpiry)) {
+    //         // Redirect to dashboard
+    //         window.location.href = "individual-dashboard.html"
+    //         return
+    //     }
+    // }
 }
 
 // Switch login method
@@ -83,40 +83,47 @@ async function handlePasswordLogin(e) {
     }
 
     // Show loading state
-    loginBtn.disabled = true
-    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...'
+    // loginBtn.disabled = true
+    // loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...'
 
-    try {
-        // Check credentials
-        const individuals = JSON.parse(localStorage.getItem("nqr_individuals") || "[]")
-        const user = individuals.find((i) => i.email === email && i.password === password)
-
-        if (!user) {
-            throw new Error("Invalid email or password")
-        }
-
-        // Store session
-        localStorage.setItem("nqr_current_individual", email)
-        localStorage.setItem("nqr_auth_token", "demo_token_" + Date.now())
-
-        // Set session expiry (30 minutes)
-        const expiryTime = Date.now() + 30 * 60 * 1000
-        localStorage.setItem("nqr_session_expiry", expiryTime.toString())
-
-        // Redirect to dashboard
-        window.location.href = "individual-dashboard.html"
-    } catch (error) {
-        showPasswordError(error.message)
-    } finally {
-        // Reset button
-        loginBtn.disabled = false
-        loginBtn.innerHTML = "Sign In"
-    }
+            try {
+                const url = 'http://localhost:3000/api/UserLogin'
+                const response = fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                }).then(async (response) => {
+                    const data = await response.json()
+                    if (response.ok) {
+                        // Login successful, redirect to dashboard
+                        alert("Login successful! You will be redirected to your dashboard.")
+                        // Store logged in user info
+                        localStorage.setItem("fullname",data.fullname)
+                        localStorage.setItem("token",data.token)
+                        localStorage.setItem("email",data.email)
+                        window.location.href = '/individual-dashboard.html'
+                    } else {
+                        // Show error message
+                        // document.getElementById("loginPinError").textContent = data.message || "Invalid email or PIN."
+                        alert(`${data.message}`)
+                    }
+                })
+            } catch (error) {
+                alert(`${data.message}`)
+            }
+    //     finally {
+    //     // Reset button
+    //     loginBtn.disabled = false
+    //     loginBtn.innerHTML = "Sign In"
+    // }
 }
 
 // Handle PIN login
 async function handlePinLogin(e) {
     e.preventDefault()
+    // alert(`you clicked`)
 
     const email = document.getElementById("pinEmail").value.trim()
     const pin = document.getElementById("pin").value
@@ -136,41 +143,42 @@ async function handlePinLogin(e) {
         return
     }
 
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    if (pin.length !== 4) {
         showPinError("PIN must be exactly 4 digits")
         return
     }
 
     // Show loading state
-    loginBtn.disabled = true
-    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...'
+    // loginBtn.disabled = true
+    // loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...'
+
 
     try {
-        // Check credentials
-        const individuals = JSON.parse(localStorage.getItem("nqr_individuals") || "[]")
-        const user = individuals.find((i) => i.email === email && i.transactionPin === pin)
-
-        if (!user) {
-            throw new Error("Invalid email or PIN")
+        const url = 'http://localhost:3000/api/UPLogin'
+        const response = await fetch(url,{
+            method:'POST',
+            headers:{
+                'content-type':'application/json'
+            },
+            body:JSON.stringify({email,pin})
+        })
+        const data = await response.json()
+        if(!response.ok){
+            alert(`${data.message}`)
         }
-
-        // Store session
-        localStorage.setItem("nqr_current_individual", email)
-        localStorage.setItem("nqr_auth_token", "demo_token_" + Date.now())
-
-        // Set session expiry (30 minutes)
-        const expiryTime = Date.now() + 30 * 60 * 1000
-        localStorage.setItem("nqr_session_expiry", expiryTime.toString())
-
-        // Redirect to dashboard
-        window.location.href = "individual-dashboard.html"
+        localStorage.setItem('token',data.token)
+        localStorage.setItem('fullname',data.fullname)
+        localStorage.setItem('email',data.email)
+        alert(`login successful!`)
+        window.location.href = '/individual-dashboard.html'
     } catch (error) {
-        showPinError(error.message)
-    } finally {
-        // Reset button
-        loginBtn.disabled = false
-        loginBtn.innerHTML = "Sign In with PIN"
+        
     }
+    // finally {
+    //     // Reset button
+    //     loginBtn.disabled = false
+    //     loginBtn.innerHTML = "Sign In with PIN"
+    // }
 }
 
 // Toggle password visibility

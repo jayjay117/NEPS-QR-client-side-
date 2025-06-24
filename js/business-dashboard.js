@@ -1,12 +1,32 @@
-import { Chart } from "@/components/ui/chart"
-// Import necessary libraries (assuming they are available globally or via a module bundler)
-import * as lucide from "lucide" // Or however you import lucide
-import Litepicker from "litepicker" // Or however you import Litepicker
-import QRCode from "qrcode" // Or however you import qrcodejs
-import Alpine from "alpinejs" // Or however you import Alpine
+// import { Chart } from "@/components/ui/chart"
+// // Import necessary libraries (assuming they are available globally or via a module bundler)
+// import * as lucide from "lucide" // Or however you import lucide
+// import Litepicker from "litepicker" // Or however you import Litepicker
+// import QRCode from "qrcode" // Or however you import qrcodejs
+// import Alpine from "alpinejs" // Or however you import Alpine
+// i commented out the imports because they are not available in this environment.
+
 
 // Initialize Lucide icons
+   const token = localStorage.getItem("token")
+if (!token) { 
+    window.location.href = "business-login.html"
+}
 document.addEventListener("DOMContentLoaded", () => {
+    // fetch username function
+
+    const username = document.querySelector("#username")
+    const user = localStorage.getItem("BusinessName")
+    username.textContent = user ? user : "Adebayo Stores"
+    // logout function
+    const logout = document.getElementById("logout")
+    logout.addEventListener("click", () => {
+        localStorage.removeItem("BusinessName")
+        localStorage.removeItem("BusinessEmail")
+        localStorage.removeItem("BusinessPhone")
+        localStorage.removeItem("BusinessAddress")
+        window.location.href = "/login.html"
+    })
     lucide.createIcons()
 
     // Initialize date picker

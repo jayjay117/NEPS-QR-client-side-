@@ -174,7 +174,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 // Save to local storage
-                saveBusinessToLocalStorage(formData)
+                // Send to backend API
+fetch("https://neps-qr-client-side-backend.onrender.com/api/SignUp", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(formData)
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success || data.message === "User created successfully") {
+        alert("Registration successful! You will be redirected to the login page.")
+        window.location.href = "business-login.html"
+    } else {
+        alert("Signup failed: " + data.message)
+    }
+})
+.catch(error => {
+    console.error("Signup error:", error)
+    alert("An error occurred during signup. Please try again.")
+})
+
 
                 // Show success message and redirect
                 alert("Registration successful! You will be redirected to the login page.")
