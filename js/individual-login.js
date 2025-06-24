@@ -87,7 +87,7 @@ async function handlePasswordLogin(e) {
     // loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...'
 
             try {
-                const url = 'http://localhost:3000/api/UserLogin'
+                const url = 'https://neps-qr-client-side-backend.onrender.com/api/UserLogin'
                 const response = fetch(url, {
                     method: 'POST',
                     headers: {
@@ -154,7 +154,7 @@ async function handlePinLogin(e) {
 
 
     try {
-        const url = 'http://localhost:3000/api/UPLogin'
+        const url = 'https://neps-qr-client-side-backend.onrender.com/api/UserPinLogin'
         const response = await fetch(url,{
             method:'POST',
             headers:{
