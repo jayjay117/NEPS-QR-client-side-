@@ -1,7 +1,7 @@
 # NEPS-QR-client-side-
 # 🧾 🔐 Team Git Rules – Version 1.0
 **For:** All Developers, Designers, and Contributors  
-**Owner:** O. Joseph Nehikhare  
+**Owner:** Innovative Technologies  
 **Startup Standard Branch:** `main`
 
 ---
