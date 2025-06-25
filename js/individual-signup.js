@@ -117,10 +117,11 @@ function handlePersonalInfoStep(e) {
 
     if (isValid) {
         // Store form data
-        formData.fullName = fullName
-        formData.email = email
-        formData.phoneNumber = phoneNumber
-        formData.dateOfBirth = dateOfBirth
+formData.full_name = fullName
+formData.email = email
+formData.phone_number = phoneNumber
+formData.date_of_birth = dateOfBirth
+
 
         // Go to next step
         goToNextStep()
@@ -196,7 +197,7 @@ function handlePinStep(e) {
 
     if (isValid) {
         // Store PIN
-        formData.transactionPin = pin
+        formData.transaction_pin = pin
 
         // Go to verification step
         goToNextStep()
@@ -206,43 +207,59 @@ function handlePinStep(e) {
 
 // Handle Verification Step
 function handleVerificationStep(e) {
-    e.preventDefault()
+    e.preventDefault();
 
-    const enteredCode = document.getElementById("verificationCode").value
+    const enteredCode = document.getElementById("verificationCode").value;
 
     if (!enteredCode || enteredCode.length !== 6) {
-        showFieldError("verificationError", "Please enter the 6-digit verification code")
-        return
+        showFieldError("verificationError", "Please enter the 6-digit verification code");
+        return;
     }
 
-    if (enteredCode !== verificationCode) {
-        showFieldError("verificationError", "Invalid verification code. Please try again.")
-        return
-    }
-
-    // Verification successful
-    completeSignup()
+    fetch("https://neps-qr-client-side-backend.onrender.com/api/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, code: enteredCode }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.verified === true || data.message?.toLowerCase().includes("verified")) {
+                completeSignup(); // Proceed if verified
+            } else {
+                showFieldError("verificationError", data.message || "Invalid code.");
+            }
+        })
+        .catch((err) => {
+            console.error("Verification error:", err);
+            showFieldError("verificationError", "Server error.");
+        });
 }
+
 
 // Start verification process
 function startVerificationProcess() {
-    // Generate verification code
-    verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+    document.getElementById("verificationEmail").textContent = formData.email;
 
-    // Display email
-    document.getElementById("verificationEmail").textContent = formData.email
-
-    // In a real app, send email here
-    console.log("Verification code:", verificationCode) // For demo purposes
-
-    // Start countdown
-    startCountdown(300) // 5 minutes
-
-    // Show success message (simulate email sent)
-    setTimeout(() => {
-        alert(`Verification code sent to ${formData.email}\n\nFor demo purposes, the code is: ${verificationCode}`)
-    }, 1000)
+    fetch("https://neps-qr-client-side-backend.onrender.com/api/sendverificationcode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.message.toLowerCase().includes("sent")) {
+                alert(`Verification code sent to ${formData.email}`);
+                startCountdown(300); // Start 5 min timer
+            } else {
+                showFieldError("verificationError", data.message || "Could not send code.");
+            }
+        })
+        .catch((err) => {
+            console.error("Code send error:", err);
+            showFieldError("verificationError", "Server error.");
+        });
 }
+
 
 // Start countdown timer
 function startCountdown(seconds) {
@@ -267,28 +284,33 @@ function startCountdown(seconds) {
 
 // Resend verification code
 function resendVerificationCode() {
-    // Clear existing timer
-    if (countdownTimer) {
-        clearInterval(countdownTimer)
-    }
+    if (countdownTimer) clearInterval(countdownTimer);
 
-    // Generate new code
-    verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+    document.getElementById("verificationCode").disabled = false;
+    document.getElementById("verifyBtn").disabled = false;
+    document.getElementById("verificationCode").value = "";
+    hideFieldError("verificationError");
 
-    // Re-enable form
-    document.getElementById("verificationCode").disabled = false
-    document.getElementById("verifyBtn").disabled = false
-    document.getElementById("verificationCode").value = ""
-
-    // Clear errors
-    hideFieldError("verificationError")
-
-    // Restart countdown
-    startCountdown(300)
-
-    // Show new code (for demo)
-    alert(`New verification code: ${verificationCode}`)
+    fetch("https://neps-qr-client-side-backend.onrender.com/api/sendverificationcode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.message.toLowerCase().includes("sent")) {
+                alert(`New verification code sent to ${formData.email}`);
+                startCountdown(300);
+            } else {
+                showFieldError("verificationError", data.message || "Could not resend code.");
+            }
+        })
+        .catch((err) => {
+            console.error("Resend error:", err);
+            showFieldError("verificationError", "Server error.");
+        });
 }
+
 
 // Complete signup process
 function completeSignup() {
@@ -323,6 +345,7 @@ function completeSignup() {
 
           // Clear form data
           formData = {}
+          console.log(formData)
         } else {
           showFieldError("verificationError", data.message || "Signup failed.")
         }
