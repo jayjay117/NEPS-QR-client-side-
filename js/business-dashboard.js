@@ -22,9 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const logout = document.getElementById("logout")
     logout.addEventListener("click", () => {
         localStorage.removeItem("BusinessName")
-        localStorage.removeItem("BusinessEmail")
-        localStorage.removeItem("BusinessPhone")
-        localStorage.removeItem("BusinessAddress")
+        localStorage.removeItem("nqr_current_business")
+        localStorage.removeItem("token")
+        localStorage.removeItem("phonenumber")
+        // localStorage.removeItem("BusinessAddress")
         window.location.href = "/login.html"
     })
     lucide.createIcons()

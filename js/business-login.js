@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () =>{
                     localStorage.setItem("nqr_current_business", email)
                     localStorage.setItem("BusinessName", data.businessName)
                     localStorage.setItem("token", data.token)
+                    localStorage.setItem("phonenumber",data.phonenumber)
                     window.location.href = "business-dashboard.html"
                 } else {
                     // Show error message

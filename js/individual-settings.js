@@ -1,7 +1,7 @@
 // Settings JavaScript with full functionality and API integration
 document.addEventListener("DOMContentLoaded", () => {
     // Check authentication
-    checkAuthentication()
+    // checkAuthentication()
 
     // Initialize settings page
     initializeSettingsPage()
@@ -166,27 +166,21 @@ function loadUserData() {
 }
 
 // Update user display
-function updateUserDisplay(user) {
-    const userName = document.getElementById("userName")
-    const userEmail = document.getElementById("userEmail")
-    const userInitials = document.getElementById("userInitials")
+function updateUserDisplay() {
+    const fullname = localStorage.getItem("fullname")
+    const email = localStorage.getItem("email")
 
-    if (userName) userName.textContent = user.fullName || user.firstName + " " + user.lastName || "User"
-    if (userEmail) userEmail.textContent = user.email || "user@example.com"
+    const firstName = document.getElementById("welcomeName")
+    const Mail = document.getElementById("userEmail")
+    const username = document.getElementById("userName")
 
-    // Update user initials
-    if (userInitials) {
-        const initials =
-            user.fullName || user.firstName
-                ? (user.fullName || user.firstName + " " + user.lastName)
-                    .split(" ")
-                    .map((name) => name[0])
-                    .join("")
-                    .toUpperCase()
-                    .slice(0, 2)
-                : "U"
-        userInitials.textContent = initials
-    }
+    firstName.textContent = fullname
+    Mail.textContent = email
+    username.textContent = fullname
+
+    const initials = fullname.trim().charAt(0).toUpperCase()
+    document.getElementById("userInitials").textContent = initials
+    
 }
 
 // Load personal information

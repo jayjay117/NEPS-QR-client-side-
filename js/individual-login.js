@@ -100,9 +100,11 @@ async function handlePasswordLogin(e) {
                         // Login successful, redirect to dashboard
                         alert("Login successful! You will be redirected to your dashboard.")
                         // Store logged in user info
-                        localStorage.setItem("fullname",data.fullname)
-                        localStorage.setItem("token",data.token)
-                        localStorage.setItem("email",data.email)
+                        localStorage.setItem('token',data.token)
+                        localStorage.setItem('fullname',data.fullname)
+                        localStorage.setItem('email',data.email)
+                        localStorage.setItem('phone',data.phone)
+                        localStorage.setItem('dateOfBirth',data.date_of_birth )
                         window.location.href = '/individual-dashboard.html'
                     } else {
                         // Show error message
@@ -169,6 +171,8 @@ async function handlePinLogin(e) {
         localStorage.setItem('token',data.token)
         localStorage.setItem('fullname',data.fullname)
         localStorage.setItem('email',data.email)
+        localStorage.setItem('phone',data.phone)
+        localStorage.setItem('dateOfBirth',data.date_of_birth )
         alert(`login successful!`)
         window.location.href = '/individual-dashboard.html'
     } catch (error) {
