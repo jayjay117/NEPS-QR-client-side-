@@ -1,5 +1,6 @@
 // NEPS-QR Settings JavaScript
-import lucide from "lucide" // Declare the lucide variable
+// import lucide from "lucide"
+ // Declare the lucide variable
 
 class SettingsManager {
     constructor() {
@@ -132,7 +133,7 @@ class SettingsManager {
 
         const formData = new FormData(event.target)
         const accountData = {
-            businessName: formData.get("business-name") || document.getElementById("business-name").value,
+            businessName: formData.get("") || document.getElementById("business-name").value,
             email: formData.get("business-email") || document.getElementById("business-email").value,
             phone: formData.get("business-phone") || document.getElementById("business-phone").value,
             registrationNumber: formData.get("business-reg") || document.getElementById("business-reg").value,
@@ -632,6 +633,10 @@ class SettingsManager {
 // Initialize settings manager when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
     new SettingsManager()
+    const username = document.getElementById("username")
+    console.log(username)
+    const user = localStorage.getItem("businessName")
+    username.innerHTML = user
 })
 
 // Export for potential use in other modules
