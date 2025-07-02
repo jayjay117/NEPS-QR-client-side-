@@ -637,6 +637,14 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(username)
     const user = localStorage.getItem("businessName")
     username.innerHTML = user
+    const logout = document.querySelector(".logout")
+    logout.addEventListener("click", () => {
+        localStorage.removeItem("token")
+        localStorage.removeItem("BusinessName ")
+        localStorage.removeItem("email")
+        localStorage.removeItem("phonenumber")
+        window.location.href = "../business-login.html"
+    })
 })
 
 // Export for potential use in other modules
